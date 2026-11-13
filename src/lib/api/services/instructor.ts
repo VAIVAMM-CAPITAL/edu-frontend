@@ -2,7 +2,10 @@ import { apiClient } from "@/lib/api/client";
 export interface InstructorStats {
     totalCourses: number;
     totalStudents: number;
+    /** @deprecated Adds different currencies together; use revenueByCurrency. */
     totalRevenue: number;
+    /** Completed revenue per currency. */
+    revenueByCurrency?: { currency: string; total: number }[];
     recentCourses: any[];
 }
 export interface InstructorCoursesResponse {

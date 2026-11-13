@@ -48,7 +48,7 @@ export default function InstructorBlogsPage() {
                 <Panel>
                     <EmptyState
                         title="Not enabled for your account"
-                        description="Talk to a Prime Learning admin to be granted authoring access."
+                        description="Talk to a Phantom King admin to be granted authoring access."
                         icon={<Pen className="h-10 w-10" />}
                     />
                 </Panel>

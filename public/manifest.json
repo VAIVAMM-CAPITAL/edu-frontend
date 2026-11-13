@@ -1,27 +1,17 @@
 {
-  "name": "PRIME E-Learning & Training",
-  "short_name": "PRIME",
-  "description": "Dubai's premier online education platform for financial literacy, trading skills, and professional development.",
+  "name": "Phantom King — Global Trading Intelligence",
+  "short_name": "Phantom King",
+  "description": "Structured financial-market education, transparent research and practical risk tools from Phantom King.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#e0b458",
+  "background_color": "#fcfbf8",
+  "theme_color": "#fbfaf7",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
   "categories": ["education", "finance", "business"],
   "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

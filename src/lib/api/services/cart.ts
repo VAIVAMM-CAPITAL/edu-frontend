@@ -5,8 +5,14 @@ export interface CartItem {
     courseId?: string;
     sectionId?: string;
     itemType: "COURSE" | "SECTION";
-    price: string;
+    /** Price in the buyer's country, re-read on every listing; null when not on sale there. */
+    price: string | null;
+    compareAtPrice?: string | null;
     currency: string;
+    market?: string;
+    /** False when this item cannot be bought in the buyer's country (or is a lesson). */
+    purchasable?: boolean;
+    unavailableReason?: string | null;
     title?: string;
     thumbnail?: string;
     course?: {

@@ -15,21 +15,19 @@ interface Stat {
 
 const STATS: Stat[] = [
   {
-    label: "Learners enrolled",
-    description: "across 43 countries, including our home markets, India and the UAE",
-    value: 12400,
-    suffix: "+",
+    label: "Forex Academy modules",
+    description: "from currency-market foundations to professional research",
+    value: 10,
   },
   {
-    label: "Courses published",
-    description: "spanning all seven core categories",
-    value: 85,
+    label: "Crypto Academy modules",
+    description: "from blockchain fundamentals to portfolio risk",
+    value: 8,
   },
   {
-    label: "Average completion",
-    description: "nearly double the industry baseline",
-    value: 87,
-    suffix: "%",
+    label: "Phantom King divisions",
+    description: "Academy, Research, Crypto, Capital, Brokers and Terminal",
+    value: 6,
   },
 ];
 
@@ -127,10 +125,10 @@ export function Chapter3Stats() {
       id="chapter-stats"
       className="relative min-h-[100svh] w-full overflow-hidden"
       style={{ backgroundColor: "var(--paper)" }}
-      aria-label="Prime Learning by the numbers"
+      aria-label="Phantom King by the numbers"
     >
       <div className="mx-auto flex h-[100svh] max-w-7xl flex-col justify-center px-8 lg:px-16">
-        <Eyebrow onPaper>By the numbers</Eyebrow>
+        <Eyebrow onPaper>The platform</Eyebrow>
         <h2
           className="display mt-6 max-w-[14ch]"
           style={{
@@ -138,9 +136,9 @@ export function Chapter3Stats() {
             color: "var(--text-primary-ink)",
           }}
         >
-          Scale you can{" "}
+          A curriculum you can{" "}
           <em className="italic" style={{ color: "var(--gold-dark)" }}>
-            feel
+            follow
           </em>
           .
         </h2>

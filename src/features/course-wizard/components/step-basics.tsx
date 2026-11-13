@@ -1,4 +1,5 @@
 "use client";
+import { PLATFORM_CURRENCY } from "@/config/commerce";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -64,7 +65,7 @@ export function StepBasics() {
                     shortDescription: data.description,
                     categoryId: data.categoryId,
                     price: 0,
-                    currency: "AED",
+                    currency: PLATFORM_CURRENCY,
                     status: "DRAFT",
                     slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
                     level: data.level,

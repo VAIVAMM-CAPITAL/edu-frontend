@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import { MARKET_HEADER, readMarketCookie } from "@/lib/market";
 
 const getBaseUrl = (): string => {
   // Use same-origin /api so Next.js rewrites proxy to the backend (avoids CORS and network errors)
@@ -33,6 +34,11 @@ apiClient.interceptors.request.use(
     const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Prices and checkout follow the country the visitor chose (or was detected in).
+    const market = readMarketCookie();
+    if (market) {
+      config.headers[MARKET_HEADER] = market;
     }
     return config;
   },

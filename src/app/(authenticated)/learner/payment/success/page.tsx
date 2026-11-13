@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Loader2, XCircle } from "lucide-react";
@@ -9,6 +9,8 @@ import { LearningSurface, Panel } from "@/components/learning/learning-surface";
 import { useVerifyPayment } from "@/features/payments/hooks/use-payments";
 
 const REDIRECT_SECONDS = 5;
+/** A payment the gateway has not confirmed yet is re-checked this many times, 3 s apart. */
+const PENDING_RETRIES = 10;
 
 function prefersReducedMotion() {
     return (
@@ -20,16 +22,42 @@ function prefersReducedMotion() {
 function PaymentSuccessContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    // Stripe returns with sessionId; Razorpay (India) with the payment IDs.
     const sessionId = searchParams.get("sessionId");
-    const { mutate: verifyPayment, isPending, isSuccess, isError, error } = useVerifyPayment();
+    const paymentIdsParam = searchParams.get("paymentIds") || searchParams.get("paymentId");
+    const verifyInput = useMemo(
+        () =>
+            sessionId
+                ? { sessionId }
+                : paymentIdsParam
+                  ? { paymentIds: paymentIdsParam.split(",").filter(Boolean).slice(0, 20) }
+                  : null,
+        [sessionId, paymentIdsParam],
+    );
+    const { mutate: verifyPayment, isPending: requestPending, isSuccess: requestOk, isError, error, data } = useVerifyPayment();
     const [countdown, setCountdown] = useState(REDIRECT_SECONDS);
     const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [attempts, setAttempts] = useState(0);
+    const awaitingGateway = requestOk && data?.status === "PENDING";
+    const isSuccess = requestOk && data?.success !== false && data?.status !== "PENDING";
+    const stillConfirming = awaitingGateway && attempts >= PENDING_RETRIES;
+    const isPending = requestPending || (awaitingGateway && !stillConfirming);
 
     useEffect(() => {
-        if (sessionId) {
-            verifyPayment({ sessionId });
+        if (verifyInput) {
+            verifyPayment(verifyInput);
         }
-    }, [sessionId, verifyPayment]);
+    }, [verifyInput, verifyPayment]);
+
+    // The gateway may confirm a few seconds after the buyer returns: check again.
+    useEffect(() => {
+        if (!awaitingGateway || attempts >= PENDING_RETRIES || !verifyInput) return;
+        const timer = setTimeout(() => {
+            setAttempts((count) => count + 1);
+            verifyPayment(verifyInput);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [awaitingGateway, attempts, verifyInput, verifyPayment]);
 
     useEffect(() => {
         if (shouldRedirect) {
@@ -84,7 +112,7 @@ function PaymentSuccessContent() {
         };
     }, [isSuccess]);
 
-    if (!sessionId) {
+    if (!verifyInput) {
         return (
             <LearningSurface>
                 <Panel className="mx-auto max-w-lg p-8 text-center">
@@ -176,6 +204,25 @@ function PaymentSuccessContent() {
                     </div>
                 ) : null}
 
+                {stillConfirming ? (
+                    <div aria-live="polite">
+                        <Loader2
+                            aria-hidden="true"
+                            className="mx-auto mb-5 h-10 w-10 text-[var(--ls-accent)]"
+                        />
+                        <h1 className="text-xl font-semibold text-[var(--ls-ink)]">
+                            Your payment is being confirmed
+                        </h1>
+                        <p className="mt-2 text-sm text-[var(--ls-ink-quiet)]">
+                            Your bank is still processing it. Your module appears in My courses as soon as
+                            the payment is confirmed, and we email you a receipt. You do not need to pay again.
+                        </p>
+                        <Button onClick={() => router.push("/learner/my-courses")} size="lg" className="mt-6 w-full">
+                            Go to My courses
+                        </Button>
+                    </div>
+                ) : null}
+
                 {isError ? (
                     <div aria-live="polite">
                         <XCircle
@@ -196,7 +243,7 @@ function PaymentSuccessContent() {
                         ) : null}
                         <div className="mt-6 flex flex-col gap-2 sm:flex-row">
                             <Button
-                                onClick={() => verifyPayment({ sessionId })}
+                                onClick={() => verifyInput && verifyPayment(verifyInput)}
                                 size="lg"
                                 className="w-full"
                             >

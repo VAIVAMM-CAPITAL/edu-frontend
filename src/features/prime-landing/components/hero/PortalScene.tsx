@@ -63,16 +63,16 @@ export function PortalScene({ mode = "idle", source = "portal" }: Props) {
       aria-label={
         mode === "graduation"
           ? "Animated particle cloud forming the word Begin"
-          : "Animated particle portal, the Prime Learning gate"
+          : "Animated particle portal, the Phantom King gate"
       }
     >
       <Canvas
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 100 }}
-        style={{ background: "#0b192f" }}
+        style={{ background: "#1b1a17" }}
         onCreated={({ gl }) => {
-          gl.setClearColor(new Color("#0b192f"), 1);
+          gl.setClearColor(new Color("#1b1a17"), 1);
           gl.toneMapping = NoToneMapping;
         }}
       >
@@ -117,7 +117,7 @@ function SceneInterior({ mode, source }: Required<Props>) {
     <>
       <mesh position={[0, 0, -8]}>
         <planeGeometry args={[40, 24]} />
-        <meshBasicMaterial color="#0b192f" />
+        <meshBasicMaterial color="#1b1a17" />
       </mesh>
 
       <ParticleIcosahedron mode={mode} count={8000} />

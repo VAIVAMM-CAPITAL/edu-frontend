@@ -71,7 +71,7 @@ export function ParticleIcosahedron({ mode = "idle", count = 8000 }: Props) {
           typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 2) : 1,
       },
       uColorGold: { value: new THREE.Color("#d4a574") },
-      uColorElectric: { value: new THREE.Color("#5b6cff") },
+      uColorElectric: { value: new THREE.Color("#b6a27d") },
     }),
     []
   );

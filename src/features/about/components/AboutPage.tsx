@@ -1,31 +1,17 @@
 "use client";
 
-import { Sparkles, TrendingUp, Compass } from "lucide-react";
 import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { PageHeader } from "@/components/marketing/motion/PageHeader";
 import { Reveal } from "@/components/marketing/motion/Reveal";
 import { AnimatedCtaRow } from "@/components/marketing/motion/AnimatedCtaRow";
+import { SectionHeading, cardClass } from "@/components/marketing/section";
 import { Eyebrow } from "@/features/prime-landing/components/ui/Eyebrow";
-import { SectionHeading, cardClass } from "@/features/contact/components/ContactDetails";
-import { COMPANY, REGIONS } from "@/config/company";
-
-const PILLARS = [
-  {
-    icon: Sparkles,
-    title: "Learn Smarter",
-    body: "Premium, practical programmes built by operators, not theorists. Every course ships toward a real outcome.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Grow Faster",
-    body: "Cohorts, mentorship, and hands on projects that move careers and teams forward quickly.",
-  },
-  {
-    icon: Compass,
-    title: "Lead With Purpose",
-    body: "The skills and judgement to lead in an AI driven economy, across India, the UAE, and beyond.",
-  },
-];
+import {
+  BRAND_ARCHITECTURE,
+  CORE_PILLARS,
+  EDITORIAL_STANDARDS,
+  PRINCIPLES,
+} from "@/config/phantom-content";
 
 export function AboutPage() {
   return (
@@ -36,114 +22,93 @@ export function AboutPage() {
             eyebrow="About"
             title={
               <>
-                Premium learning,{" "}
-                <em className="italic text-[var(--gold)]">real outcomes</em>
+                Intelligence over emotion.{" "}
+                <em className="italic text-[var(--gold)]">Strategy over speculation.</em>
               </>
             }
-            description={`${COMPANY.brandName} is the education brand of ${COMPANY.legalName}, building career defining programmes for professionals across India, the UAE, and a global community.`}
+            description="Phantom King is an international financial markets education, research and trading technology platform for ambitious traders, investors and market enthusiasts."
           />
 
-          {/* Story */}
           <Reveal as="section" className="mt-16">
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[3fr_2fr]">
               <div className="space-y-5">
                 <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  We started Prime Learning with a simple belief: serious learners
-                  deserve programmes that are practical, mentor led, and built to
-                  ship real results. No filler, no recycled theory.
+                  Phantom King is envisioned as a global platform connecting financial market
+                  education, independent research methodologies, trading analytics and responsible
+                  market participation.
                 </p>
                 <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  Today our cohorts span agentic AI, applied engineering, and
-                  leadership, delivered to individuals and organisations across
-                  India and the UAE. Every programme is designed by operators who
-                  have done the work, so what you learn maps directly to outcomes
-                  in the real world.
+                  Our mission is to make complex market concepts accessible through structured
+                  learning and transparent analytical frameworks. Our vision is to become a trusted
+                  international destination for traders who value evidence, discipline and
+                  continuous development.
                 </p>
                 <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  {COMPANY.tagline}
+                  We believe market participation begins with education, preparation, transparency
+                  and responsible risk management. We do not promise profits. We build knowledge. We
+                  do not ignore risk. We respect it.
                 </p>
               </div>
 
               <div className={cardClass}>
-                <Eyebrow>At a glance</Eyebrow>
-                <dl className="mt-5 space-y-4 text-sm">
-                  <div>
-                    <dt style={{ color: "var(--text-secondary)" }}>Legal entity</dt>
-                    <dd className="mt-1 font-medium" style={{ color: "var(--text-primary)" }}>
-                      {COMPANY.legalName}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt style={{ color: "var(--text-secondary)" }}>Headquarters</dt>
-                    <dd className="mt-1 font-medium" style={{ color: "var(--text-primary)" }}>
-                      Hyderabad, Telangana, India
-                    </dd>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <dt style={{ color: "var(--text-secondary)" }}>CIN</dt>
-                      <dd className="mt-1 font-mono font-medium" style={{ color: "var(--text-primary)" }}>
-                        {COMPANY.cin}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt style={{ color: "var(--text-secondary)" }}>PAN</dt>
-                      <dd className="mt-1 font-mono font-medium" style={{ color: "var(--text-primary)" }}>
-                        {COMPANY.pan}
-                      </dd>
-                    </div>
-                  </div>
-                </dl>
+                <Eyebrow>Our principles</Eyebrow>
+                <ul className="mt-5 space-y-3 text-sm">
+                  {PRINCIPLES.map((principle) => (
+                    <li key={principle} className="flex items-center gap-3">
+                      <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-[var(--gold)]" />
+                      <span style={{ color: "var(--text-primary)" }}>{principle}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </Reveal>
 
-          {/* Pillars */}
           <Reveal as="section" className="mt-20">
-            <SectionHeading eyebrow="What we stand for" title="Three promises" />
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {PILLARS.map((pillar) => (
-                <div key={pillar.title} className={cardClass}>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--gold)]/10 text-[var(--gold-bright)]">
-                    <pillar.icon className="h-5 w-5" />
+            <SectionHeading eyebrow="What we do" title="Core pillars" />
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {CORE_PILLARS.map((pillar, index) => (
+                <div key={pillar} className={cardClass}>
+                  <span className="display text-2xl text-[var(--gold-bright)]">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3
-                    className="mt-5 text-base font-semibold tracking-tight"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {pillar.title}
-                  </h3>
-                  <p
-                    className="mt-2 text-sm leading-relaxed"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {pillar.body}
+                  <p className="mt-4 text-base leading-relaxed" style={{ color: "var(--text-primary)" }}>
+                    {pillar}
                   </p>
                 </div>
               ))}
             </div>
           </Reveal>
 
-          {/* Where we operate */}
           <Reveal as="section" className="mt-20">
-            <SectionHeading eyebrow="Where we work" title="Built in India and the UAE" />
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {REGIONS.map((region) => (
-                <div key={region.name} className={cardClass}>
-                  <span className="text-3xl" aria-hidden="true">
-                    {region.flag}
-                  </span>
+            <SectionHeading eyebrow="How we publish" title="Editorial standards" />
+            <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {EDITORIAL_STANDARDS.map((standard) => (
+                <li
+                  key={standard}
+                  className="flex items-start gap-3 text-base leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  <span className="mt-2.5 inline-block h-1 w-1 shrink-0 rounded-full bg-[var(--gold)]" />
+                  {standard}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal as="section" className="mt-20">
+            <SectionHeading eyebrow="The Phantom King family" title="Brand architecture" />
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {BRAND_ARCHITECTURE.map((brand) => (
+                <div key={brand.name} className={cardClass}>
                   <h3
-                    className="mt-4 text-base font-semibold tracking-tight"
-                    style={{ color: "var(--text-primary)" }}
+                    className="text-sm font-semibold uppercase tracking-[0.16em]"
+                    style={{ color: "var(--gold-bright)" }}
                   >
-                    {region.name}
+                    {brand.name}
                   </h3>
-                  <p
-                    className="mt-2 text-sm leading-relaxed"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {region.note}
+                  <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                    {brand.description}
                   </p>
                 </div>
               ))}
@@ -152,9 +117,9 @@ export function AboutPage() {
 
           <AnimatedCtaRow
             ctas={[
-              { label: "Contact us", href: "/contact", variant: "gold" },
+              { label: "Explore the Forex Academy", href: "/#chapter-courses", variant: "gold" },
               { label: "Start learning", href: "/signup", variant: "ghost" },
-              { label: "Explore courses", href: "/#chapter-courses", variant: "ghost" },
+              { label: "Contact our team", href: "/contact", variant: "ghost" },
             ]}
           />
         </div>

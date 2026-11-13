@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import Link from "next/link";
-import { SOCIAL_LINKS } from "@/config/company";
+import { RISK_DISCLAIMER } from "@/config/phantom-content";
 import { Button } from "@/features/prime-landing/components/ui/Button";
 import { Eyebrow } from "@/features/prime-landing/components/ui/Eyebrow";
 
@@ -11,15 +11,19 @@ type FooterLink = { label: string; href: string };
 
 const LINKS: Record<string, FooterLink[]> = {
   Academy: [
-    { label: "About", href: "/about" },
-    { label: "Leadership", href: "/leadership" },
-    { label: "Events", href: "/events" },
+    { label: "Forex Academy", href: "/#chapter-courses" },
+    { label: "Crypto Academy", href: "/#chapter-courses" },
+    { label: "Membership", href: "/#chapter-plans" },
+    { label: "Learning space", href: "/login" },
+  ],
+  Company: [
+    { label: "About Phantom King", href: "/about" },
+    { label: "Contact & Support", href: "/contact" },
   ],
   Legal: [
-    { label: "Privacy", href: "/privacy-policy" },
-    { label: "Terms", href: "/terms-of-service" },
-    { label: "Code of Conduct", href: "/terms-of-service" },
-    { label: "Contact", href: "/contact" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Risk Disclosure", href: "/risk-disclosure" },
   ],
 };
 
@@ -39,20 +43,13 @@ export function Footer() {
     <footer className="relative border-t border-[var(--fog)] bg-[var(--ink)] px-6 py-20 text-white lg:px-16">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 md:grid-cols-[1.75fr_1.5fr_1.75fr] md:gap-12">
         <div>
-          <Image
-            src="/logo-dark.svg"
-            alt="Prime Learning"
-            width={520}
-            height={304}
-            className="h-28 w-auto max-w-[520px] object-contain object-left sm:h-32 sm:max-w-[640px] lg:h-40 lg:max-w-[760px]"
-            priority
-          />
+          <BrandLogo size="lg" />
           <p className="mt-5 max-w-sm text-lg leading-relaxed text-[var(--text-secondary)] sm:text-xl">
-            Learn Smarter. Grow Faster. Lead With Purpose.
+            Master the Markets. Rule Your Future.
           </p>
         </div>
 
-        <div className="grid w-fit max-w-xs grid-cols-3 gap-x-4 self-start sm:max-w-sm sm:gap-x-5">
+        <div className="grid grid-cols-3 gap-x-6 self-start">
           {Object.entries(LINKS).map(([header, items]) => (
             <div key={header}>
               <Eyebrow className="!text-[10px] !tracking-[0.18em]">{header}</Eyebrow>
@@ -75,7 +72,7 @@ export function Footer() {
         <div>
           <Eyebrow className="!text-xs sm:!text-sm">Stay in the loop</Eyebrow>
           <p className="mt-5 max-w-sm text-lg leading-relaxed text-[var(--text-secondary)] sm:text-xl">
-            Monthly dispatch on new courses and free resources.
+            Market education notes and new module announcements.
           </p>
           <form className="mt-6 flex gap-3" onSubmit={(e) => e.preventDefault()}>
             <label className="sr-only" htmlFor="footer-email">
@@ -94,25 +91,18 @@ export function Footer() {
         </div>
       </div>
 
-      <div
-        className="mx-auto mt-20 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-[var(--fog)] pt-6 text-sm sm:text-base md:flex-row"
+      <p
+        className="mx-auto mt-16 max-w-7xl text-xs leading-relaxed"
         style={{ color: "var(--text-tertiary)" }}
       >
-        <span>© 2026 Prime Learning. All rights reserved.</span>
-        <nav aria-label="Social media" className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          {SOCIAL_LINKS.map((social) => (
-            <a
-              key={social.href}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--text-secondary)] transition-colors hover:text-[var(--gold-bright)]"
-            >
-              {social.label}
-            </a>
-          ))}
-        </nav>
-        <span>Built in India & the UAE</span>
+        <strong className="font-semibold">Risk disclosure.</strong> {RISK_DISCLAIMER}
+      </p>
+
+      <div
+        className="mx-auto mt-8 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-[var(--fog)] pt-6 text-sm sm:text-base md:flex-row"
+        style={{ color: "var(--text-tertiary)" }}
+      >
+        <span>© 2026 PHANTOM KING — Global Trading Intelligence. All Rights Reserved.</span>
         <button
           onClick={toggleWebgl}
           className="text-[var(--text-secondary)] underline-offset-4 hover:text-[var(--gold-bright)] hover:underline"

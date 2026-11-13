@@ -14,6 +14,7 @@ import {
 } from "@/components/learning/learning-surface";
 import { useCategoryBySlug } from "@/features/categories/hooks/use-categories";
 import { useCourses } from "@/features/courses/hooks/use-courses";
+import { CoursePrice } from "@/components/commerce/course-price";
 
 export default function CategoryPage({
     params,
@@ -116,10 +117,7 @@ export default function CategoryPage({
                                         {course.description}
                                     </p>
                                     <div className="mt-auto flex items-center justify-between gap-3 pt-2">
-                                        <span className="ls-nums font-medium text-[var(--ls-ink)]">
-                                            {course.currency}{" "}
-                                            {parseFloat(course.price).toFixed(2)}
-                                        </span>
+                                        <CoursePrice course={course} className="ls-nums" priceClassName="text-sm sm:text-base font-medium text-[var(--ls-ink)]"/>
                                         <Link href={`/learner/courses/${course.courseId}`}>
                                             <Button variant="outline" size="sm">
                                                 View Course

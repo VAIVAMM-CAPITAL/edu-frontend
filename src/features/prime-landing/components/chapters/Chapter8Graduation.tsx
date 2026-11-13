@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { ScrollTrigger, registerGsap } from "@/features/prime-landing/lib/gsap";
 import { useScrollStore } from "@/features/prime-landing/components/providers/ScrollStore";
 import { Eyebrow } from "@/features/prime-landing/components/ui/Eyebrow";
@@ -17,6 +18,7 @@ const PortalScene = dynamic(
 );
 
 export function Chapter8Graduation() {
+  const router = useRouter();
   const rootRef = useRef<HTMLElement>(null);
   const setChapter = useScrollStore((s) => s.setChapter);
   const setMorph = useScrollStore((s) => s.setMorph);
@@ -60,24 +62,29 @@ export function Chapter8Graduation() {
       </div>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[rgba(11,25,47,0.5)]"
+        className="pointer-events-none absolute inset-0 bg-[rgba(27,26,23,0.5)]"
       />
       <div className="relative z-10 flex flex-col items-center px-6 text-center">
-        <Eyebrow>Your turn</Eyebrow>
+        <Eyebrow>Phantom King</Eyebrow>
         <h2
-          className="display mt-4 max-w-[14ch]"
+          className="display mt-4 max-w-[18ch]"
           style={{
-            fontSize: "clamp(3rem, 9vw, 7.5rem)",
+            fontSize: "clamp(2.5rem, 7vw, 6rem)",
             textShadow: "0 0 80px rgba(212,165,116,0.15)",
             color: "var(--text-primary)",
           }}
         >
-          Begin.
+          Learn the market. Understand the risk.{" "}
+          <em className="italic text-[var(--gold)]">Master your process.</em>
         </h2>
-        <p className="body-lg mt-6 max-w-xl">Your next chapter is one scroll away.</p>
+        <p className="body-lg mt-6 max-w-xl">Education first. No promises of profit, and no shortcuts around risk.</p>
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Button variant="primary">Explore Courses</Button>
-          <Button variant="ghost">Talk to Sales</Button>
+          <Button type="button" variant="primary" onClick={() => router.push("/signup")}>
+            Start Learning
+          </Button>
+          <Button type="button" variant="ghost" onClick={() => router.push("/contact")}>
+            Contact Our Team
+          </Button>
         </div>
       </div>
     </section>

@@ -53,19 +53,16 @@ test.describe("learner course detail", () => {
         await expect(lesson).toContainText("locked");
     });
 
-    test("offers a per-section purchase only where one is configured", async ({ page }) => {
+    test("sells the whole module, never a section on its own", async ({ page }) => {
+        // Checkout accepts modules only, so even a section with its own price
+        // configured is not offered for separate purchase.
         await mockApi(page, { course: COURSE_CATALOGUE });
         await page.goto(URL);
 
         const content = page.getByRole("region", { name: /Course content/ });
-        const sections = content.locator("ol").first().locator("> li");
-
-        await expect(sections.nth(0)).toContainText("AED 79.00");
-        await expect(
-            sections.nth(0).getByRole("button", { name: /Buy Section/ }),
-        ).toBeVisible();
-        // The second section is bundle-only, so it carries no separate price.
-        await expect(sections.nth(1).getByRole("button", { name: /Buy Section/ })).toHaveCount(0);
+        await expect(content.locator("ol").first().locator("> li")).toHaveCount(2);
+        await expect(content.getByRole("button", { name: /Buy Section/i })).toHaveCount(0);
+        await expect(content).not.toContainText("AED 79.00");
     });
 
     test("marks an already-owned section as owned", async ({ page }) => {
@@ -85,7 +82,7 @@ test.describe("learner course detail", () => {
         await page.goto(URL);
 
         // Lesson count and duration come from the sections themselves.
-        await expect(page.getByText("5 lessons").first()).toBeVisible();
+        await expect(page.getByText("5 videos").first()).toBeVisible();
 
         // Regression guard: the page used to hardcode a rating, a review
         // count, a student count and a "Bestseller" badge for every course.

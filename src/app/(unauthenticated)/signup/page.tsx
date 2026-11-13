@@ -76,14 +76,14 @@ function SignupPageInner() {
             toast.error(errorMessage);
         });
     }
-    return (<AuthSplitLayout title="Prime Learning" subtitle="Create your account and start learning today." image={<AnimatedBarChart />}>
+    return (<AuthSplitLayout title="Phantom King" subtitle="Create your account and start learning today." image={<AnimatedBarChart />}>
       <div className="space-y-5 sm:space-y-6">
         <header className="space-y-1.5 sm:space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             Create Account
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Join Prime Learning in minutes.
+            Join Phantom King in minutes.
           </p>
         </header>
 

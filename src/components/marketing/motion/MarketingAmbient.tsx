@@ -9,7 +9,7 @@ export function MarketingAmbient() {
         className="absolute -left-[20%] top-[10%] h-[min(520px,60vw)] w-[min(520px,60vw)] rounded-full"
         style={{
           background:
-            "radial-gradient(circle, rgba(224,180,88,0.14) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(205,168,81,0.14) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, 40, 0],
@@ -35,7 +35,7 @@ export function MarketingAmbient() {
         className="absolute bottom-[5%] left-[30%] h-[min(360px,40vw)] w-[min(360px,40vw)] rounded-full opacity-60"
         style={{
           background:
-            "radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 65%)",
+            "radial-gradient(circle, rgba(205,168,81,0.08) 0%, transparent 65%)",
         }}
         animate={{
           x: [0, 20, 0],

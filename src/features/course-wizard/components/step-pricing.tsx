@@ -1,4 +1,5 @@
 "use client";
+import { PLATFORM_CURRENCY } from "@/config/commerce";
 import { useCourseWizard } from "../store";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ export function StepPricing() {
                 ? parsedCompareAt
                 : undefined;
             if (priceType === "PAID" && (isNaN(finalPrice) || finalPrice < 1)) {
-                toast.error("Please enter a valid price (minimum 1 AED)");
+                toast.error(`Please enter a valid price (minimum 1 ${PLATFORM_CURRENCY})`);
                 return;
             }
             if (priceType === "PAID" && finalCompareAt !== undefined && !isNaN(finalCompareAt) && finalCompareAt < finalPrice) {
@@ -51,7 +52,7 @@ export function StepPricing() {
                 dto: {
                     price: finalPrice,
                     compareAtPrice: priceType === "PAID" ? finalCompareAt : undefined,
-                    currency: "AED",
+                    currency: PLATFORM_CURRENCY,
                 },
             });
             toast.success("Pricing saved successfully!");
@@ -101,10 +102,10 @@ export function StepPricing() {
         </div>
 
         {priceType === "PAID" && (<div className="space-y-2 pl-2 border-l-2 border-primary ml-4">
-                <Label>Final Price (AED)</Label>
+                <Label>Final Price ({PLATFORM_CURRENCY})</Label>
                 <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} min="1" step="0.01" placeholder="e.g. 199.99" className="max-w-[240px]"/>
                 <div className="pt-2 space-y-2">
-                  <Label>Original Price (AED) (optional)</Label>
+                  <Label>Original Price ({PLATFORM_CURRENCY}) (optional)</Label>
                   <Input type="number" value={compareAtPrice} onChange={(e) => setCompareAtPrice(e.target.value)} min="0" step="0.01" placeholder="e.g. 249.99" className="max-w-[240px]"/>
                   <p className="text-xs text-muted-foreground">
                     If set, this will be shown as a strike-through price on the course page.

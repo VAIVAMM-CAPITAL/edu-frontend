@@ -3,8 +3,7 @@ import { Manrope, Inter, Poppins } from "next/font/google";
 import "../../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "@/components/providers";
-import { COMMUNICATION_CONTACTS } from "@/config/contact";
-import { OFFICE_LOCATION } from "@/config/pricing";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/config/site";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -12,36 +11,25 @@ const poppins = Poppins({
     subsets: ["latin"],
     variable: "--font-poppins",
 });
-const siteUrl = "https://primelearning.ae";
-const siteName = "Prime Learning";
-const siteDescription =
-    "Premium online learning for professionals in India, the UAE, and beyond. Build real-world skills. Ship real outcomes.";
+const siteUrl = SITE_URL;
+const siteName = SITE_NAME;
+const siteDescription = SITE_DESCRIPTION;
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-        default: `${siteName} | Learn Smarter. Grow Faster. Lead With Purpose.`,
+        default: `${siteName} — ${SITE_TAGLINE}`,
         template: `%s | ${siteName}`,
     },
     description: siteDescription,
     keywords: [
-        "online education",
+        "trading education",
+        "forex academy",
+        "gold and commodities education",
+        "crypto academy",
+        "market research",
+        "risk management",
+        "financial markets courses",
         "online courses",
-        "professional development",
-        "e-learning platform",
-        "career development",
-        "business and leadership",
-        "technology and data",
-        "finance and markets",
-        "creative and design",
-        "project management",
-        "test preparation",
-        "certificates",
-        "online courses India",
-        "upskilling India",
-        "AI courses Bangalore",
-        "professional development India",
-        "edtech India",
-        "tech courses Hyderabad",
     ],
     authors: [{ name: siteName, url: siteUrl }],
     creator: siteName,
@@ -64,24 +52,23 @@ export const metadata: Metadata = {
         locale: "en_US",
         url: siteUrl,
         siteName: siteName,
-        title: `${siteName} | Unlock Skills That Drive Your Future`,
+        title: `${siteName} — ${SITE_TAGLINE}`,
         description: siteDescription,
         images: [
             {
                 url: `${siteUrl}/og-image.png`,
                 width: 1200,
                 height: 630,
-                alt: `${siteName} | Premium online learning platform`,
+                alt: `${siteName} — ${SITE_TAGLINE}`,
                 type: "image/png",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: `${siteName} | Unlock Skills That Drive Your Future`,
+        title: `${siteName} — ${SITE_TAGLINE}`,
         description: siteDescription,
         images: [`${siteUrl}/og-image.png`],
-        creator: "@learning13190",
     },
     robots: {
         index: true,
@@ -96,15 +83,12 @@ export const metadata: Metadata = {
             "max-snippet": -1,
         },
     },
-    verification: {
-        google: "your-google-verification-code",
-    },
     category: "Education",
 };
 export const viewport: Viewport = {
     themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-        { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+        { media: "(prefers-color-scheme: light)", color: "#fbfaf7" },
+        { media: "(prefers-color-scheme: dark)", color: "#1b1a17" },
     ],
     width: "device-width",
     initialScale: 1,
@@ -117,31 +101,9 @@ export default function RootLayout({ children, }: Readonly<{
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
         name: siteName,
-        alternateName: "PAET",
         url: siteUrl,
-        logo: `${siteUrl}/logo.png`,
+        logo: `${siteUrl}/brand/phantom-king-crown.png`,
         description: siteDescription,
-        sameAs: [
-            "https://x.com/learning13190",
-            "https://www.linkedin.com/company/prime-learning-ae/",
-            "https://www.instagram.com/primelearningofficial/",
-        ],
-        contactPoint: COMMUNICATION_CONTACTS.map((channel) => ({
-            "@type": "ContactPoint",
-            contactType: channel.division,
-            email: channel.email,
-            name: channel.contactName,
-            availableLanguage: ["English", "Arabic"],
-        })),
-        address: {
-            "@type": "PostalAddress",
-            name: OFFICE_LOCATION.name,
-            streetAddress: OFFICE_LOCATION.streetAddress,
-            addressLocality: OFFICE_LOCATION.addressLocality,
-            addressRegion: OFFICE_LOCATION.addressRegion,
-            postalCode: OFFICE_LOCATION.postalCode,
-            addressCountry: OFFICE_LOCATION.addressCountry,
-        },
     };
     const websiteJsonLd = {
         "@context": "https://schema.org",
@@ -161,11 +123,8 @@ export default function RootLayout({ children, }: Readonly<{
     return (<html lang="en" suppressHydrationWarning>
       <head>
         <link rel="canonical" href={siteUrl}/>
-        <link rel="alternate" hrefLang="en-AE" href={siteUrl}/>
-        <link rel="alternate" hrefLang="en-IN" href={siteUrl}/>
-        <link rel="alternate" hrefLang="en" href={siteUrl}/>
         <link rel="icon" href="/favicon.ico" sizes="any"/>
-        <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+        <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192"/>
         <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
         <link rel="manifest" href="/manifest.json"/>
         <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -176,7 +135,7 @@ export default function RootLayout({ children, }: Readonly<{
         }}/>
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${poppins.variable} font-sans antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <Providers>{children}</Providers>
         </ThemeProvider>
       </body>

@@ -50,7 +50,7 @@ export function ModernSidebar({ items, className }: ModernSidebarProps) {
                 <Link href="/" className="flex items-center gap-2">
                   <GraduationCap className="h-6 w-6 text-primary"/>
                   <span className="text-lg font-bold tracking-tight text-foreground">
-                    PRIME <span className="text-primary">LEARNING</span>
+                    PHANTOM <span className="text-primary-gold">KING</span>
                   </span>
                 </Link>
               </motion.div>)}
@@ -125,7 +125,7 @@ export function ModernSidebar({ items, className }: ModernSidebarProps) {
                     <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
                       <GraduationCap className="h-7 w-7 sm:h-8 sm:w-8 text-primary"/>
                       <span className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                        PRIME <span className="text-primary">LEARNING</span>
+                        PHANTOM <span className="text-primary-gold">KING</span>
                       </span>
                     </Link>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setMobileOpen(false)}>

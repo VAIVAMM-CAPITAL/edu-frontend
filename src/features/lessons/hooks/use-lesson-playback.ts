@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "@/lib/store/auth-store";
 interface PlaybackUrlResponse {
-    signedUrl: string;
+    /** "bunny": play `embedUrl` in Bunny's player; "cloudfront": play the HLS `signedUrl`. */
+    provider?: "bunny" | "cloudfront";
+    embedUrl?: string | null;
+    signedUrl: string | null;
     expiresAt: string;
 }
 export interface PlaybackError {

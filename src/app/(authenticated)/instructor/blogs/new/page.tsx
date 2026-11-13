@@ -22,7 +22,7 @@ export default function NewBlogPostPage() {
                 <Panel>
                     <EmptyState
                         title="Authoring not enabled"
-                        description="Ask a Prime Learning admin to enable blog authoring for your account."
+                        description="Ask a Phantom King admin to enable blog authoring for your account."
                         icon={<Pen className="h-10 w-10" />}
                     />
                 </Panel>

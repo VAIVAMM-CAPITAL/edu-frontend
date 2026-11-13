@@ -1,4 +1,5 @@
 "use client";
+import { formatMoney } from "@/lib/market";
 import { useState } from "react";
 import Link from "next/link";
 import { BookOpen, FileEdit, PlusCircle, Trash2, Video } from "lucide-react";
@@ -80,10 +81,9 @@ export default function InstructorDashboardPage() {
                         />
                         <MetricTile
                             label="Total revenue"
-                            value={`AED ${(stats?.totalRevenue || 0).toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            })}`}
+                            value={stats?.revenueByCurrency?.length
+                                ? stats.revenueByCurrency.map((item) => formatMoney(item.total, item.currency)).join(" · ")
+                                : "No sales yet"}
                             hint="Lifetime earnings"
                         />
                     </div>

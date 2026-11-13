@@ -27,6 +27,7 @@ import { useCourses } from "@/features/courses/hooks/use-courses";
 import type { CourseFilters } from "@/features/courses/types";
 import { useDebounce } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
+import { formatMoney } from "@/lib/market";
 
 type StatusFilterValue = "all" | "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
@@ -56,8 +57,9 @@ function instructorName(course: CourseRow) {
     );
 }
 
+/** Price in the admin's own country; full country prices are on the module page. */
 function coursePrice(course: CourseRow) {
-    return `${course.currency} ${parseFloat(course.price).toFixed(2)}`;
+    return course.price === null ? "Not priced" : formatMoney(course.price, course.currency);
 }
 
 function RowActions({ course }: { course: CourseRow }) {

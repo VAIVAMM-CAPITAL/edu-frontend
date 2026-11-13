@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 export const metadata: Metadata = {
-    title: "Page Not Found | Prime Learning",
+    title: "Page Not Found | Phantom King",
     description: "The page you're looking for doesn't exist or has been moved.",
     robots: {
         index: false,
@@ -44,9 +44,9 @@ export default function NotFound() {
         <div className="mt-12 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground">
             Need help?{" "}
-            <a href="mailto:learning@primelearning.ae" className="text-primary-gold hover:underline">
+            <Link href="/contact" className="text-primary-gold hover:underline">
               Contact Support
-            </a>
+            </Link>
           </p>
         </div>
       </div>
