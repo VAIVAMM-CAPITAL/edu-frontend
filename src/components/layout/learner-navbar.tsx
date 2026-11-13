@@ -1,4 +1,5 @@
 "use client";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
@@ -11,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User, LogOut, TrendingUp, BookOpen, ShoppingCart, ArrowLeft, } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { MarketSelector } from "@/components/commerce/market-selector";
 export function LearnerNavbar() {
     const router = useRouter();
     const pathname = usePathname();
@@ -61,9 +63,10 @@ export function LearnerNavbar() {
             <span>Back</span>
           </Button>)}
         <Link href="/learner/dashboard" className="text-base sm:text-lg md:text-xl font-bold tracking-tight text-foreground flex items-center gap-1 sm:gap-2">
-          <span className="hidden sm:inline">PRIME</span>
-          <span className="text-primary hidden sm:inline">LEARNING</span>
-          <span className="sm:hidden">PRIME</span>
+          <BrandLogo variant="mark" size="sm"/>
+          <span className="hidden sm:inline">PHANTOM</span>
+          <span className="text-primary-gold hidden sm:inline">KING</span>
+          <span className="sm:hidden">PK</span>
         </Link>
       </div>
 
@@ -83,6 +86,7 @@ export function LearnerNavbar() {
       </nav>
 
       <div className="flex items-center gap-2 sm:gap-3">
+        <MarketSelector className="hidden sm:inline-flex" />
         <Button variant="ghost" size="icon" className="relative h-9 w-9 sm:h-10 sm:w-10 hover:bg-muted/50 transition-colors" asChild>
           <Link href="/learner/cart">
             <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5"/>

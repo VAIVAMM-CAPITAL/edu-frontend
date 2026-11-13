@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/config/site";
 
-const siteUrl = "https://paet.ltd";
+const siteUrl = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date();
@@ -30,16 +31,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${siteUrl}/leadership`,
+      url: `${siteUrl}/about`,
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${siteUrl}/events`,
+      url: `${siteUrl}/contact`,
       lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.85,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/risk-disclosure`,
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.4,
     },
     {
       url: `${siteUrl}/forgot-password`,

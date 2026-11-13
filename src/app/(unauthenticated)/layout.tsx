@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-const siteUrl = "https://paet.ltd";
-const siteName = "Prime Learning";
+import { SITE_URL } from "@/config/site";
+const siteUrl = SITE_URL;
+const siteName = "Phantom King";
 export const metadata: Metadata = {
     robots: {
         index: true,

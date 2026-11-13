@@ -69,9 +69,9 @@ export function AdminNavbar() {
             : "bg-background/80 backdrop-blur-sm border-b border-border")}>
       <Link href="/admin/dashboard" className="text-base sm:text-lg md:text-xl font-bold tracking-tight text-foreground flex items-center gap-1 sm:gap-2">
         <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary"/>
-        <span className="hidden sm:inline">PRIME</span>
-        <span className="text-primary hidden sm:inline">ADMIN</span>
-        <span className="sm:hidden">PRIME</span>
+        <span className="hidden sm:inline">PHANTOM KING</span>
+        <span className="text-primary-gold hidden sm:inline">ADMIN</span>
+        <span className="sm:hidden">PK</span>
       </Link>
 
       <div className="flex items-center gap-2 sm:gap-3">

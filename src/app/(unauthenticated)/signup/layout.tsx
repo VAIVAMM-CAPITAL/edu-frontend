@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-const siteUrl = "https://paet.ltd";
-const siteName = "Prime Learning";
+import { SITE_URL } from "@/config/site";
+const siteUrl = SITE_URL;
+const siteName = "Phantom King";
 export const metadata: Metadata = {
-    title: "Sign Up | Prime Learning",
-    description: "Create your Prime Learning account. Start learning with expert-led courses, progress tracking, and certificates.",
+    title: "Sign Up | Phantom King",
+    description: "Create your Phantom King account. Start learning Forex, Gold and Crypto with structured modules and progress tracking.",
     alternates: {
         canonical: `${siteUrl}/signup`,
     },
     openGraph: {
-        title: "Sign Up | Prime Learning",
-        description: "Start learning today with Prime Learning. Create your account in minutes.",
+        title: "Sign Up | Phantom King",
+        description: "Start learning today with Phantom King. Create your account in minutes.",
         url: `${siteUrl}/signup`,
         siteName: siteName,
         type: "website",

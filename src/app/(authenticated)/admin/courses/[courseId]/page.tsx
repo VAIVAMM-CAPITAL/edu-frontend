@@ -41,6 +41,7 @@ import {
     useRejectCourse,
     useRequestCourseChanges,
 } from "@/features/courses/hooks/use-courses";
+import { CountryPricesPanel } from "@/features/pricing/country-prices-panel";
 
 const reviewSchema = z.object({
     reviewNotes: z.string().optional(),
@@ -286,6 +287,13 @@ export default function AdminCourseReviewPage({
                 </aside>
 
                 <div className="space-y-6 lg:col-start-1 lg:row-start-1">
+                    <section aria-labelledby="prices-heading" className="space-y-3">
+                        <SectionHeading id="prices-heading" title="Prices by country" />
+                        <Panel className="p-5">
+                            <CountryPricesPanel courseId={courseId} />
+                        </Panel>
+                    </section>
+
                     <section aria-labelledby="overview-heading" className="space-y-3">
                         <SectionHeading id="overview-heading" title="Course overview" />
                         <Panel className="p-5">
@@ -324,10 +332,6 @@ export default function AdminCourseReviewPage({
                                         value: `${course.instructor?.firstName ?? ""} ${course.instructor?.lastName ?? ""} (${course.instructor?.email ?? "N/A"})`,
                                     },
                                     { label: "Category", value: course.category?.name ?? "N/A" },
-                                    {
-                                        label: "Price",
-                                        value: `${course.currency} ${course.price}`,
-                                    },
                                     {
                                         label: "Status",
                                         value: (

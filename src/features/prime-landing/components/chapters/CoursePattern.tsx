@@ -1,8 +1,8 @@
 "use client";
 
-import type { Course } from "@/features/prime-landing/components/chapters/courseData";
+export type CoursePatternName = "dots" | "grid" | "lines" | "waves";
 
-export function CoursePattern({ pattern }: { pattern: Course["pattern"] }) {
+export function CoursePattern({ pattern }: { pattern: CoursePatternName }) {
   const id = `p-${pattern}`;
   return (
     <svg

@@ -48,7 +48,7 @@ export const AnimatedBarChart = () => {
          
          
          <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 256 192">
-            <motion.path d="M40 150 L100 110 L160 50 L200 40" fill="none" stroke="#E3B558" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2, delay: 0.8 }}/>
+            <motion.path d="M40 150 L100 110 L160 50 L200 40" fill="none" stroke="#cda851" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2, delay: 0.8 }}/>
          </svg>
       </div>);
 };

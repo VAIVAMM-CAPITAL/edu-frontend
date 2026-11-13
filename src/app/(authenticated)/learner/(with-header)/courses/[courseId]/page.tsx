@@ -23,12 +23,21 @@ import {
 } from "@/components/learning/learning-surface";
 import { StatusPill } from "@/components/learning/status-pill";
 import { useCourse } from "@/features/courses/hooks/use-courses";
-import { useCheckEnrollment, useCreateEnrollment } from "@/features/enrollments/hooks/use-enrollments";
+import { useCheckEnrollment } from "@/features/enrollments/hooks/use-enrollments";
 import { useCreatePayment } from "@/features/payments/hooks/use-payments";
 import { useAddToCart } from "@/features/cart/hooks/use-cart";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { cn } from "@/lib/utils";
 import { CourseHeroBackground } from "@/components/course/course-hero-background";
+import { continueToPayment } from "@/features/payments/continue-to-payment";
+import { MarketSelector } from "@/components/commerce/market-selector";
+import { formatMoney, getMarket, isPurchasable } from "@/lib/market";
+
+function errorMessage(error: unknown, fallback: string) {
+    const response = (error as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message;
+    if (Array.isArray(response)) return response[0] ?? fallback;
+    return response || (error instanceof Error && error.message) || fallback;
+}
 
 function formatDuration(seconds: number) {
     const hours = Math.floor(seconds / 3600);
@@ -43,7 +52,6 @@ export default function CourseDetailPage({
 }) {
     const { courseId } = use(params);
     const { data: course, isLoading, error } = useCourse({ enabled: true, courseId });
-    const createEnrollment = useCreateEnrollment();
     const createPayment = useCreatePayment();
     const addToCart = useAddToCart();
     const { user } = useAuthStore();
@@ -57,27 +65,19 @@ export default function CourseDetailPage({
             router.push("/login");
             return;
         }
-        if (course && parseFloat(course.price) > 0) {
-            const courseIdValue = course.courseId;
+        if (!course || !isPurchasable(course)) return;
+        try {
             const payment = await createPayment.mutateAsync({
-                gateway: "STRIPE_UAE",
                 itemType: "COURSE",
-                courseId: courseIdValue,
-                successUrl: `${window.location.origin}/learner/payment/success?courseId=${courseIdValue}`,
+                courseId: course.courseId,
+                successUrl: `${window.location.origin}/learner/payment/success?courseId=${course.courseId}`,
                 cancelUrl: `${window.location.origin}/learner/payment/failure`,
             });
-            if (payment.checkoutUrl) {
-                window.location.href = payment.checkoutUrl;
-            } else {
-                router.push(`/learner/payment/success?paymentId=${payment.paymentId}`);
+            if ((await continueToPayment(payment)) === "cancelled") {
+                toast.info("Payment cancelled. You have not been charged.");
             }
-            return;
-        }
-        try {
-            await createEnrollment.mutateAsync({ courseId });
-            router.push(`/learner/courses/${courseId}/watch`);
-        } catch (error: unknown) {
-            void error;
+        } catch (error) {
+            toast.error(errorMessage(error, "We could not start the payment. Please try again."));
         }
     };
 
@@ -86,12 +86,12 @@ export default function CourseDetailPage({
             router.push("/login");
             return;
         }
-        if (!course) return;
+        if (!course || !isPurchasable(course)) return;
         try {
             await addToCart.mutateAsync({ itemType: "COURSE", courseId: course.courseId });
             router.push("/learner/cart");
-        } catch {
-            // Surfaced through the mutation's error state.
+        } catch (error) {
+            toast.error(errorMessage(error, "Could not add this module to your cart."));
         }
     };
 
@@ -132,10 +132,11 @@ export default function CourseDetailPage({
                 acc + (section.lessons?.reduce((sum, l) => sum + (l.duration || 0), 0) || 0),
             0,
         ) || 0;
-    const totalLessons = course.sections?.reduce((acc, s) => acc + (s.lessons?.length || 0), 0) || 0;
-    const price = parseFloat(course.price);
+    const totalLessons = course.sections?.reduce((acc, s) => acc + (s.lessons?.filter((item) => item.type === "VIDEO").length || 0), 0) || 0;
+    const onSale = isPurchasable(course);
+    const price = onSale ? Number(course.price) : 0;
     const compareAt = course.compareAtPrice ? parseFloat(String(course.compareAtPrice)) : null;
-    const showCompareAt = compareAt !== null && !isNaN(compareAt) && compareAt > price;
+    const showCompareAt = onSale && compareAt !== null && !isNaN(compareAt) && compareAt > price;
     const discount = showCompareAt ? Math.round(((compareAt! - price) / compareAt!) * 100) : null;
 
     return (
@@ -145,7 +146,7 @@ export default function CourseDetailPage({
             {/* Facts about this course, all read from the curriculum itself. */}
             <div className="ls-nums mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-[var(--ls-divider)] pb-5 text-sm text-[var(--ls-ink-quiet)]">
                 <span>
-                    {totalLessons} lesson{totalLessons === 1 ? "" : "s"}
+                    {totalLessons} video{totalLessons === 1 ? "" : "s"}
                 </span>
                 <span aria-hidden="true">·</span>
                 <span>{formatDuration(totalDuration)} total</span>
@@ -166,13 +167,19 @@ export default function CourseDetailPage({
                 >
                     <Panel className="p-5">
                         <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="ls-nums text-3xl font-semibold text-[var(--ls-ink)]">
-                                AED {price.toFixed(2)}
-                            </span>
+                            {onSale ? (
+                                <span className="ls-nums text-3xl font-semibold text-[var(--ls-ink)]">
+                                    {formatMoney(price, course.currency)}
+                                </span>
+                            ) : (
+                                <span className="text-sm text-[var(--ls-ink-quiet)]">
+                                    Not available in {getMarket(course.market).name} yet.
+                                </span>
+                            )}
                             {showCompareAt ? (
                                 <>
                                     <span className="ls-nums text-lg text-[var(--ls-ink-quiet)] line-through">
-                                        AED {compareAt!.toFixed(2)}
+                                        {formatMoney(compareAt!, course.currency)}
                                     </span>
                                     {discount !== null ? (
                                         <StatusPill tone="ok">{discount}% off</StatusPill>
@@ -194,7 +201,12 @@ export default function CourseDetailPage({
                                 </Button>
                             ) : (
                                 <>
-                                    <Button className="w-full" size="lg" onClick={handleAddToCart}>
+                                    <Button
+                                        className="w-full"
+                                        size="lg"
+                                        onClick={handleAddToCart}
+                                        disabled={!onSale || addToCart.isPending}
+                                    >
                                         Add to cart
                                     </Button>
                                     <Button
@@ -202,34 +214,17 @@ export default function CourseDetailPage({
                                         className="w-full"
                                         size="lg"
                                         onClick={handleBuyNow}
-                                        disabled={
-                                            createEnrollment.isPending || createPayment.isPending
-                                        }
+                                        disabled={!onSale || createPayment.isPending}
                                     >
-                                        {createEnrollment.isPending || createPayment.isPending
-                                            ? "Processing..."
-                                            : "Buy now"}
+                                        {createPayment.isPending ? "Processing..." : "Buy now"}
                                     </Button>
+                                    <div className="space-y-1 pt-1 text-xs text-[var(--ls-ink-quiet)]">
+                                        <span>Prices shown for</span>
+                                        <MarketSelector className="w-full [&_select]:w-full" />
+                                    </div>
                                 </>
                             )}
                         </div>
-
-                        <ul className="mt-4 space-y-1.5 border-t border-[var(--ls-divider)] pt-3 text-sm text-[var(--ls-ink-quiet)]">
-                            <li className="flex items-center gap-2">
-                                <CheckCircle2
-                                    aria-hidden="true"
-                                    className="h-4 w-4 shrink-0 text-[var(--ls-ok)]"
-                                />
-                                30-Day Money-Back Guarantee
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <CheckCircle2
-                                    aria-hidden="true"
-                                    className="h-4 w-4 shrink-0 text-[var(--ls-ok)]"
-                                />
-                                Full Lifetime Access
-                            </li>
-                        </ul>
                     </Panel>
                 </aside>
 
@@ -264,21 +259,14 @@ export default function CourseDetailPage({
                                         aria-hidden="true"
                                         className="h-4 w-4 shrink-0 text-[var(--ls-ink-quiet)]"
                                     />
-                                    <span className="ls-nums">{totalLessons} lessons</span>
+                                    <span className="ls-nums">{totalLessons} videos</span>
                                 </li>
                                 <li className="flex items-center gap-2.5 text-sm text-[var(--ls-ink)]">
                                     <Smartphone
                                         aria-hidden="true"
                                         className="h-4 w-4 shrink-0 text-[var(--ls-ink-quiet)]"
                                     />
-                                    Access on mobile and TV
-                                </li>
-                                <li className="flex items-center gap-2.5 text-sm text-[var(--ls-ink)]">
-                                    <Clock
-                                        aria-hidden="true"
-                                        className="h-4 w-4 shrink-0 text-[var(--ls-ink-quiet)]"
-                                    />
-                                    Full lifetime access
+                                    Learn at your own pace
                                 </li>
                             </ul>
                         </Panel>
@@ -288,19 +276,13 @@ export default function CourseDetailPage({
                         <SectionHeading
                             id="content-heading"
                             title="Course content"
-                            count={`${totalLessons} lessons · ${formatDuration(totalDuration)}`}
+                            count={`${totalLessons} videos · ${formatDuration(totalDuration)}`}
                         />
                         <Panel className="overflow-hidden">
                             <ol className="divide-y divide-[var(--ls-divider)]">
                                 {course.sections?.map((section, idx) => {
                                     const isSectionAccessible =
                                         course.accessibleSectionIds?.includes(section.sectionId);
-                                    const canPurchaseSeparately =
-                                        section.priceType === "INDIVIDUAL" ||
-                                        section.priceType === "BOTH";
-                                    const sectionPrice = section.sectionPrice
-                                        ? parseFloat(section.sectionPrice)
-                                        : 0;
                                     return (
                                         <li key={section.sectionId} className="p-4 sm:p-5">
                                             <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
@@ -310,65 +292,10 @@ export default function CourseDetailPage({
                                                     </span>{" "}
                                                     {section.title}
                                                 </h3>
-                                                {!isEnrolled &&
-                                                canPurchaseSeparately &&
-                                                sectionPrice > 0 ? (
-                                                    <div className="flex items-center gap-2">
-                                                        {isSectionAccessible ? (
-                                                            <StatusPill
-                                                                tone="ok"
-                                                                icon={<Check className="h-3 w-3" />}
-                                                            >
-                                                                Owned
-                                                            </StatusPill>
-                                                        ) : (
-                                                            <>
-                                                                <span className="ls-nums text-sm font-medium text-[var(--ls-ink)]">
-                                                                    {course.currency}{" "}
-                                                                    {sectionPrice.toFixed(2)}
-                                                                </span>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={async () => {
-                                                                        if (!user) {
-                                                                            router.push("/login");
-                                                                            return;
-                                                                        }
-                                                                        try {
-                                                                            await addToCart.mutateAsync(
-                                                                                {
-                                                                                    itemType:
-                                                                                        "SECTION",
-                                                                                    sectionId:
-                                                                                        section.sectionId,
-                                                                                },
-                                                                            );
-                                                                            toast.success(
-                                                                                "Section added to cart",
-                                                                            );
-                                                                        } catch (error: any) {
-                                                                            toast.error(
-                                                                                error.response?.data
-                                                                                    ?.message ||
-                                                                                    "Failed to add to cart",
-                                                                            );
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <ShoppingCart
-                                                                        aria-hidden="true"
-                                                                        className="mr-1 h-3.5 w-3.5"
-                                                                    />
-                                                                    Buy Section
-                                                                    <span className="sr-only">
-                                                                        {" "}
-                                                                        — {section.title}
-                                                                    </span>
-                                                                </Button>
-                                                            </>
-                                                        )}
-                                                    </div>
+                                                {isSectionAccessible && !isEnrolled ? (
+                                                    <StatusPill tone="ok" icon={<Check className="h-3 w-3" />}>
+                                                        Owned
+                                                    </StatusPill>
                                                 ) : null}
                                             </div>
 
@@ -440,9 +367,6 @@ export default function CourseDetailPage({
                                         <p className="font-medium text-[var(--ls-ink)]">
                                             {course.instructor.firstName}{" "}
                                             {course.instructor.lastName}
-                                        </p>
-                                        <p className="truncate text-sm text-[var(--ls-ink-quiet)]">
-                                            {course.instructor.email}
                                         </p>
                                     </div>
                                 </div>

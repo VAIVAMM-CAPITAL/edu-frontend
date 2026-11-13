@@ -1,36 +1,36 @@
 :global(.primeLanding) {
-  --ink: #0b192f;
-  --paper: #fffcf5;
+  --ink: #1b1a17;
+  --paper: #fcfbf8;
 
-  --gold: #e0b458;
-  --gold-bright: #f2d184;
-  --gold-dark: #e0b458;
-  --gold-soft: #f2d184;
+  --gold: #cda851;
+  --gold-bright: #e2c886;
+  --gold-dark: #806b45;
+  --gold-soft: #e2c886;
 
-  --electric: #2563eb;
-  --mist: #112240;
-  --mist-alt: #0e1726;
-  --fog: #1e293b;
+  --electric: #b6a27d;
+  --mist: #26241f;
+  --mist-alt: #211f1b;
+  --fog: #3a362e;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #94a3b8;
+  --text-primary: #f7f5ef;
+  --text-secondary: #b5aea0;
+  --text-tertiary: #a39c8d;
 
-  --text-primary-ink: #1c1917;
-  --text-secondary-ink: #78716c;
-  --text-tertiary-ink: #78716c;
+  --text-primary-ink: #302e2a;
+  --text-secondary-ink: #625c52;
+  --text-tertiary-ink: #777166;
 
   --paper-card: #ffffff;
-  --paper-muted: #f5f0e6;
-  --paper-border: #e6e1d6;
+  --paper-muted: #f4f0e7;
+  --paper-border: #e9e4da;
 
   /*
-   * This surface is always the dark navy theme, regardless of the app's
+   * This surface is always the dark charcoal theme, regardless of the app's
    * light/dark setting. Tailwind v4 resolves its `--color-*` theme aliases
    * (e.g. `--color-foreground: var(--foreground)`) once at `:root`, so a
    * nested `.dark` class cannot re-point them. Override the aliases here so
    * shadcn UI utilities (text-foreground, bg-background, border-input, …)
-   * render against the navy surface for every visitor, light theme included.
+   * render against the charcoal surface for every visitor, light theme included.
    */
   --color-background: var(--ink);
   --color-foreground: var(--text-primary);
@@ -41,7 +41,7 @@
   --color-primary: var(--gold);
   --color-primary-foreground: var(--ink);
   --color-secondary: var(--electric);
-  --color-secondary-foreground: #ffffff;
+  --color-secondary-foreground: #1b1a17;
   --color-muted: var(--mist);
   --color-muted-foreground: var(--text-secondary);
   --color-accent: var(--mist);
@@ -54,7 +54,7 @@
    * Native form controls (the <select> dropdown popup, scrollbars, date
    * pickers) are painted by the browser using `color-scheme`. On a light app
    * theme that popup renders white, so options inheriting the surface's white
-   * text become invisible. Force dark so native controls match the navy surface.
+   * text become invisible. Force dark so native controls match the charcoal surface.
    */
   color-scheme: dark;
 

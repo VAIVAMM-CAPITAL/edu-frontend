@@ -1,4 +1,5 @@
 "use client";
+import { PLATFORM_CURRENCY } from "@/config/commerce";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSections, useCreateSection, useUpdateSection, useDeleteSection, useCreateLesson, useDeleteLesson, } from "@/lib/hooks/use-lessons";
@@ -244,7 +245,7 @@ export function CourseBuilder({ courseId }: CourseBuilderProps) {
                 <div>
                   <h4 className="font-medium text-sm">{module.title}</h4>
                   {module.sectionPrice && (<Badge variant="secondary" className="mt-1 text-xs">
-                      AED {Number(module.sectionPrice).toFixed(2)} ({module.priceType})
+                      {PLATFORM_CURRENCY} {Number(module.sectionPrice).toFixed(2)} ({module.priceType})
                     </Badge>)}
                 </div>
               </div>

@@ -54,7 +54,7 @@ function LoginPageInner() {
             toast.error(errorMessage);
         });
     }
-    return (<AuthSplitLayout title="Prime Learning" subtitle="Sign in to continue your learning journey." image={<AnimatedLineChart />}>
+    return (<AuthSplitLayout title="Phantom King" subtitle="Sign in to continue your learning journey." image={<AnimatedLineChart />}>
       <div className="space-y-5 sm:space-y-6">
         <header className="space-y-1.5 sm:space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">

@@ -1,4 +1,5 @@
 "use client";
+import { PLATFORM_CURRENCY } from "@/config/commerce";
 import { use, useState, useEffect } from "react";
 import {
     LearningPageHeader,
@@ -32,6 +33,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseBuilder } from "@/features/courses/components/course-builder";
 import type { AxiosError } from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { coursesApi } from "@/lib/api/services/courses";
 const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
     // Keep in sync with backend UpdateCourseDto (@MinLength(10))
@@ -56,6 +59,12 @@ export default function CourseEditPage({ params, }: {
     const { courseId } = use(params);
     const [mounted, setMounted] = useState(false);
     const { data: course, isLoading } = useCourse({ enabled: true, courseId });
+    // This form edits the UAE (AED) price, so load that price whatever country the editor is in.
+    const { data: uaePricing } = useQuery({
+        queryKey: ["course-uae-price", courseId],
+        queryFn: () => coursesApi.getById(courseId, { market: "AE" }),
+        enabled: !!courseId,
+    });
     const { data: categories } = useCategories();
     const updateCourse = useUpdateCourse();
     const submitForReview = useSubmitCourseForReview();
@@ -70,26 +79,26 @@ export default function CourseEditPage({ params, }: {
             description: "",
             price: 0,
             compareAtPrice: undefined,
-            currency: "AED",
+            currency: PLATFORM_CURRENCY,
             thumbnail: "",
             categoryId: "",
             status: "DRAFT",
         },
     });
     useEffect(() => {
-        if (course) {
+        if (course && uaePricing) {
             reset({
                 title: course.title,
                 description: course.description,
-                price: parseFloat(course.price),
-                compareAtPrice: course.compareAtPrice ? parseFloat(String(course.compareAtPrice)) : undefined,
-                currency: "AED",
+                price: uaePricing.price ? parseFloat(uaePricing.price) : 0,
+                compareAtPrice: uaePricing.compareAtPrice ? parseFloat(String(uaePricing.compareAtPrice)) : undefined,
+                currency: PLATFORM_CURRENCY,
                 thumbnail: course.thumbnail || "",
                 categoryId: course.categoryId,
                 status: course.status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
             });
         }
-    }, [course, reset]);
+    }, [course, uaePricing, reset]);
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (!courseId) {
             toast.error("Course ID is missing. Please reload and try again.");
@@ -99,7 +108,7 @@ export default function CourseEditPage({ params, }: {
             const slug = generateSlug(values.title);
             const dto: any = {
                 ...values,
-                currency: "AED",
+                currency: PLATFORM_CURRENCY,
                 shortDescription: values.description,
                 slug,
                 // Ensure thumbnail is always sent so prod updates (upload or remove)
@@ -185,7 +194,7 @@ export default function CourseEditPage({ params, }: {
                   
                   <input type="hidden" {...register("categoryId")} value={watch("categoryId") || ""}/>
                   <input type="hidden" {...register("status")} value={watch("status") || "DRAFT"}/>
-                  <input type="hidden" {...register("currency")} value="AED"/>
+                  <input type="hidden" {...register("currency")} value={PLATFORM_CURRENCY}/>
                   <div className="space-y-2">
                     <Label htmlFor="title">Title</Label>
                     <Input id="title" placeholder="Course title" {...register("title")}/>
@@ -238,14 +247,14 @@ export default function CourseEditPage({ params, }: {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="price">Final Price (AED)</Label>
+                      <Label htmlFor="price">UAE price (AED)</Label>
                       <Input id="price" type="number" step="0.01" placeholder="0.00" {...register("price", { valueAsNumber: true })}/>
                       {errors.price && (<p className="text-xs text-destructive">
                           {errors.price.message}
                         </p>)}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="compareAtPrice">Original Price (AED) (optional)</Label>
+                      <Label htmlFor="compareAtPrice">UAE original price (AED, optional)</Label>
                       <Input id="compareAtPrice" type="number" step="0.01" placeholder="0.00" {...register("compareAtPrice", { valueAsNumber: true })}/>
                     </div>
                   </div>

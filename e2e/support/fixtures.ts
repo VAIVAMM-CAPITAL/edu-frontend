@@ -145,8 +145,8 @@ export const COURSE_SQL = {
             title: "Getting your bearings",
             order: 1,
             lessons: [
-                { id: "l1", lessonId: "l1", sectionId: "s1", title: "Why SQL still wins", order: 1, duration: 480 },
-                { id: "l2", lessonId: "l2", sectionId: "s1", title: "Tables, rows and keys", order: 2, duration: 720 },
+                { id: "l1", lessonId: "l1", type: "VIDEO", sectionId: "s1", title: "Why SQL still wins", order: 1, duration: 480 },
+                { id: "l2", lessonId: "l2", type: "VIDEO", sectionId: "s1", title: "Tables, rows and keys", order: 2, duration: 720 },
             ],
         },
         {
@@ -156,9 +156,9 @@ export const COURSE_SQL = {
             title: "Shaping results",
             order: 2,
             lessons: [
-                { id: "l3", lessonId: "l3", sectionId: "s2", title: "Filtering with WHERE", order: 1, duration: 900 },
-                { id: "l4", lessonId: "l4", sectionId: "s2", title: "Grouping and aggregates", order: 2, duration: 1500 },
-                { id: "l5", lessonId: "l5", sectionId: "s2", title: "Joins without fear", order: 3, duration: 2100 },
+                { id: "l3", lessonId: "l3", type: "VIDEO", sectionId: "s2", title: "Filtering with WHERE", order: 1, duration: 900 },
+                { id: "l4", lessonId: "l4", type: "VIDEO", sectionId: "s2", title: "Grouping and aggregates", order: 2, duration: 1500 },
+                { id: "l5", lessonId: "l5", type: "VIDEO", sectionId: "s2", title: "Joins without fear", order: 3, duration: 2100 },
             ],
         },
     ],
@@ -381,7 +381,11 @@ export const PLATFORM_STATS = {
     totalEnrollments: 5104,
 };
 
-export const REVENUE_STATS = { total: 412350.5 };
+export const REVENUE_STATS = {
+    total: 412350.5,
+    // The dashboard shows each currency on its own, never added together.
+    byCurrency: [{ currency: "USD", total: 412350.5, transactions: 5104 }],
+};
 
 export const ENROLLMENT_STATS = { b2c: 3820, b2b: 1284 };
 
@@ -554,6 +558,7 @@ export const INSTRUCTOR_STATS = {
     totalStudents: 1284,
     totalCourses: 3,
     totalRevenue: 84250.75,
+    revenueByCurrency: [{ currency: "AED", total: 84250.75 }],
     recentCourses: [
         {
             courseId: "course-sql",

@@ -83,15 +83,6 @@ const nextConfig: NextConfig = {
                     },
                 ],
             },
-            {
-                source: "/team/:path*",
-                headers: [
-                    {
-                        key: "Cache-Control",
-                        value: "public, max-age=0, must-revalidate",
-                    },
-                ],
-            },
         ];
     },
     async redirects() {
@@ -101,11 +92,9 @@ const nextConfig: NextConfig = {
                 destination: "/",
                 permanent: true,
             },
-            {
-                source: "/courses",
-                destination: "/learner/courses",
-                permanent: true,
-            },
+            { source: "/leadership", destination: "/about", permanent: false },
+            { source: "/events", destination: "/", permanent: false },
+            { source: "/spotlight", destination: "/about", permanent: false },
         ];
     },
 };

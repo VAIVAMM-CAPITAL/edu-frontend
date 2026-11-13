@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { PRIMARY_NAV } from "@/config/site-nav";
 import { parseNavHref, scrollToHash } from "@/lib/site-navigation";
 import { Button } from "@/features/prime-landing/components/ui/Button";
 import { useScrollStore } from "@/features/prime-landing/components/providers/ScrollStore";
+import { MarketSelector } from "@/components/commerce/market-selector";
 
 type MarketingNavProps = {
   /** Landing homepage: hide on scroll down, theme from scroll store */
@@ -155,7 +156,7 @@ export function MarketingNav({ variant = "static" }: MarketingNavProps) {
         }`}
         style={{
           // Solid ink on static pages avoids logo/header seams on Windows (blur + opacity).
-          background: isPaper ? "rgba(255,252,245,0.92)" : isLanding ? "rgba(11,25,47,0.92)" : "#0b192f",
+          background: isPaper ? "rgba(252,251,248,0.92)" : isLanding ? "rgba(27,26,23,0.92)" : "#1b1a17",
           backdropFilter: isLanding ? "blur(10px)" : undefined,
           WebkitBackdropFilter: isLanding ? "blur(10px)" : undefined,
           color: isPaper ? "var(--ink)" : "white",
@@ -166,33 +167,16 @@ export function MarketingNav({ variant = "static" }: MarketingNavProps) {
           key={logoKey}
           href="/"
           className={`group inline-flex shrink-0 items-center bg-transparent transition-transform duration-500 ease-out hover:scale-[1.03] active:scale-[0.99]${logoKey > 0 && isLanding ? " logo-appear" : ""}`}
-          aria-label="Prime Learning home"
+          aria-label="Phantom King home"
         >
-          <Image
-            src="/brand/mobile-icon.png"
-            alt="Prime Learning"
-            width={56}
-            height={56}
-            className="h-12 w-12 bg-transparent object-contain sm:h-14 sm:w-14 lg:hidden"
-            priority
-            unoptimized
-          />
-          <Image
-            src={isPaper ? "/logo.svg" : "/logo-dark.svg"}
-            alt="Prime Learning"
-            width={520}
-            height={304}
-            className="hidden h-28 w-auto max-w-[min(720px,75vw)] bg-transparent object-contain object-left opacity-95 transition-[opacity,transform] duration-500 group-hover:opacity-100 lg:block xl:h-32 xl:max-w-[840px]"
-            priority
-            unoptimized
-          />
+          <BrandLogo collapseOnMobile priority />
         </Link>
 
         <ul
           className="relative hidden min-w-0 flex-1 items-center justify-center gap-0.5 overflow-x-auto rounded-full border px-1.5 py-1 text-xs lg:flex xl:text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           style={{
-            borderColor: isPaper ? "rgba(11,25,47,0.08)" : "rgba(255,255,255,0.08)",
-            background: isPaper ? "rgba(11,25,47,0.03)" : "rgba(255,255,255,0.04)",
+            borderColor: isPaper ? "rgba(27,26,23,0.08)" : "rgba(255,255,255,0.08)",
+            background: isPaper ? "rgba(27,26,23,0.03)" : "rgba(255,255,255,0.04)",
           }}
           onMouseLeave={() => setHoveredHref(null)}
         >
@@ -222,7 +206,7 @@ export function MarketingNav({ variant = "static" }: MarketingNavProps) {
                         background:
                           "linear-gradient(135deg, var(--gold-bright), var(--gold))",
                         boxShadow:
-                          "0 0 0 1px rgba(212,175,55,0.55), 0 8px 22px -6px rgba(212,175,55,0.7), 0 0 16px rgba(212,175,55,0.4)",
+                          "0 0 0 1px rgba(205,168,81,0.55), 0 8px 22px -6px rgba(205,168,81,0.7), 0 0 16px rgba(205,168,81,0.4)",
                       }}
                       transition={{ type: "spring", stiffness: 420, damping: 32, mass: 0.6 }}
                     />
@@ -280,13 +264,14 @@ export function MarketingNav({ variant = "static" }: MarketingNavProps) {
           </motion.button>
 
           <div className="hidden items-center gap-2 sm:gap-3 lg:flex">
+            <MarketSelector tone="dark" />
             <Button
               type="button"
               variant="gold"
               className="hidden h-10 px-4 text-xs sm:inline-flex"
               onClick={() => router.push("/signup")}
             >
-              Enroll
+              Start learning
             </Button>
           </div>
         </div>
@@ -344,13 +329,14 @@ export function MarketingNav({ variant = "static" }: MarketingNavProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, ...defaultTransition }}
               >
+                <MarketSelector tone="dark" className="mb-3 w-full [&_select]:w-full" />
                 <Button
                   type="button"
                   variant="gold"
                   className="w-full"
                   onClick={() => router.push("/signup")}
                 >
-                  Enroll
+                  Start learning
                 </Button>
               </motion.div>
             </motion.div>

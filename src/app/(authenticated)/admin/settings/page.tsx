@@ -13,7 +13,7 @@ import {
 } from "@/components/learning/learning-surface";
 
 export default function AdminSettingsPage() {
-    const [platformName, setPlatformName] = useState("PrimeFX");
+    const [platformName, setPlatformName] = useState("Phantom King");
     const [maintenanceMode, setMaintenanceMode] = useState(false);
     const [allowRegistrations, setAllowRegistrations] = useState(true);
 

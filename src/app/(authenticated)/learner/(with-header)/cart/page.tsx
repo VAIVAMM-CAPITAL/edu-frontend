@@ -1,4 +1,7 @@
 "use client";
+import { formatMoney } from "@/lib/market";
+import { continueToPayment } from "@/features/payments/continue-to-payment";
+import { MarketSelector } from "@/components/commerce/market-selector";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,8 +58,10 @@ export default function CartPage() {
     const [itemCoupons, setItemCoupons] = useState<Record<string, CouponValidationResult>>({});
 
     const cartItems = cartData || [];
-    const subtotal = cartItems.reduce((acc, item) => acc + Number(item.price || 0), 0);
-    const currency = "AED";
+    // Only modules on sale in the buyer's country can be paid for.
+    const availableItems = cartItems.filter((item) => item.purchasable !== false && item.price !== null);
+    const subtotal = availableItems.reduce((acc, item) => acc + Number(item.price || 0), 0);
+    const currency = cartItems[0]?.currency ?? "USD";
     const perItemDiscountAmount = couponApplied
         ? 0
         : Object.values(itemCoupons).reduce((sum, r) => sum + Number(r.discountAmount || 0), 0);
@@ -79,7 +84,7 @@ export default function CartPage() {
             try {
                 const res = await validateBulkCoupon.mutateAsync({
                     couponCode: debouncedCoupon,
-                    cartItemIds: cartItems.map((c) => c.cartItemId),
+                    cartItemIds: availableItems.map((c) => c.cartItemId),
                 });
                 if (cancelled) return;
                 if (couponApplied && couponApplied === debouncedCoupon.toUpperCase() && res.valid) {
@@ -135,20 +140,17 @@ export default function CartPage() {
             const applied = itemCoupons[item.cartItemId];
             const couponCode = applied?.valid ? applied.couponCode : undefined;
             const payment = await createPayment.mutateAsync({
-                gateway: "STRIPE_UAE",
-                itemType: item.itemType,
-                courseId: item.itemType === "COURSE" ? item.courseId : undefined,
-                sectionId: item.itemType === "SECTION" ? item.sectionId : undefined,
+                itemType: "COURSE",
+                courseId: item.courseId,
                 couponCode,
-                metadata: { cartItemId: item.cartItemId },
                 successUrl: `${window.location.origin}/learner/payment/success`,
                 cancelUrl: `${window.location.origin}/learner/payment/failure`,
-            } as any);
-            if (payment.checkoutUrl) {
-                window.location.href = payment.checkoutUrl;
+            });
+            if ((await continueToPayment(payment)) === "cancelled") {
+                toast.info("Payment cancelled. You have not been charged.");
             }
         } catch (error: any) {
-            toast.error(error.message || "Failed to initiate checkout");
+            toast.error(error.response?.data?.message || error.message || "Failed to initiate checkout");
         } finally {
             setIsCheckingOut(null);
         }
@@ -158,19 +160,24 @@ export default function CartPage() {
         if (cartItems.length === 0) return;
         setIsBulkCheckingOut(true);
         try {
-            const cartItemIds = cartItems.map((item) => item.cartItemId);
+            const cartItemIds = availableItems.map((item) => item.cartItemId);
+            if (cartItemIds.length === 0) {
+                toast.error("None of these modules are on sale in your country.");
+                setIsBulkCheckingOut(false);
+                return;
+            }
             const payment = await createBulkPayment.mutateAsync({
-                gateway: "STRIPE_UAE",
                 cartItemIds,
                 couponCode: couponApplied || undefined,
                 successUrl: `${window.location.origin}/learner/payment/success?bulk=true`,
                 cancelUrl: `${window.location.origin}/learner/payment/failure`,
             });
-            if (payment.checkoutUrl) {
-                window.location.href = payment.checkoutUrl;
+            if ((await continueToPayment(payment)) === "cancelled") {
+                toast.info("Payment cancelled. You have not been charged.");
+                setIsBulkCheckingOut(false);
             }
         } catch (error: any) {
-            toast.error(error.message || "Failed to initiate checkout");
+            toast.error(error.response?.data?.message || error.message || "Failed to initiate checkout");
             setIsBulkCheckingOut(false);
         }
     };
@@ -225,15 +232,18 @@ export default function CartPage() {
                     className="mb-6 lg:col-start-2 lg:row-start-1 lg:mb-0 lg:sticky lg:top-6"
                 >
                     <Panel className="p-5">
-                        <h2 className="text-base font-semibold text-[var(--ls-ink)]">
-                            Order summary
-                        </h2>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            <h2 className="text-base font-semibold text-[var(--ls-ink)]">
+                                Order summary
+                            </h2>
+                            <MarketSelector />
+                        </div>
 
                         <dl className="mt-3 space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <dt className="text-[var(--ls-ink-quiet)]">Subtotal</dt>
                                 <dd className="ls-nums font-medium text-[var(--ls-ink)]">
-                                    {currency} {subtotal.toFixed(2)}
+                                    {formatMoney(subtotal, currency)}
                                 </dd>
                             </div>
                             {couponApplied && bulkDiscountAmount > 0 ? (
@@ -242,7 +252,7 @@ export default function CartPage() {
                                         Discount ({couponApplied})
                                     </dt>
                                     <dd className="ls-nums font-medium text-[var(--ls-ok)]">
-                                        -{currency} {bulkDiscountAmount.toFixed(2)}
+                                        -{formatMoney(bulkDiscountAmount, currency)}
                                     </dd>
                                 </div>
                             ) : null}
@@ -252,14 +262,14 @@ export default function CartPage() {
                                         Discount (item coupons)
                                     </dt>
                                     <dd className="ls-nums font-medium text-[var(--ls-ok)]">
-                                        -{currency} {perItemDiscountAmount.toFixed(2)}
+                                        -{formatMoney(perItemDiscountAmount, currency)}
                                     </dd>
                                 </div>
                             ) : null}
                             <div className="flex justify-between border-t border-[var(--ls-divider)] pt-2">
                                 <dt className="font-semibold text-[var(--ls-ink)]">Total</dt>
                                 <dd className="ls-nums text-lg font-semibold text-[var(--ls-ink)]">
-                                    {currency} {total.toFixed(2)}
+                                    {formatMoney(total, currency)}
                                 </dd>
                             </div>
                         </dl>
@@ -486,10 +496,15 @@ export default function CartPage() {
                                                     </Button>
                                                 </div>
 
-                                                <div className="ls-nums text-lg font-semibold text-[var(--ls-ink)]">
-                                                    {item.currency}{" "}
-                                                    {parseFloat(String(item.price || 0)).toFixed(2)}
-                                                </div>
+                                                {item.purchasable === false || item.price === null ? (
+                                                    <p className="text-sm text-[var(--ls-ink-quiet)]">
+                                                        {item.unavailableReason || "Not available in your country."} Remove it to check out.
+                                                    </p>
+                                                ) : (
+                                                    <div className="ls-nums text-lg font-semibold text-[var(--ls-ink)]">
+                                                        {formatMoney(item.price, item.currency)}
+                                                    </div>
+                                                )}
 
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                                     {cartItems.length > 1 && couponApplied ? (
@@ -507,14 +522,7 @@ export default function CartPage() {
                                                                             .couponCode
                                                                     }
                                                                 </span>{" "}
-                                                                (-{item.currency}{" "}
-                                                                {parseFloat(
-                                                                    String(
-                                                                        itemCoupons[item.cartItemId]
-                                                                            .discountAmount || 0,
-                                                                    ),
-                                                                ).toFixed(2)}
-                                                                )
+                                                                (-{formatMoney(itemCoupons[item.cartItemId].discountAmount || 0, item.currency)})
                                                             </span>
                                                             <Button
                                                                 size="sm"
@@ -637,6 +645,8 @@ export default function CartPage() {
                                                     <Button
                                                         onClick={() => handleCheckout(item)}
                                                         disabled={
+                                                            item.purchasable === false ||
+                                                            item.price === null ||
                                                             isCheckingOutItem ||
                                                             isRemoving ||
                                                             isBulkCheckingOut

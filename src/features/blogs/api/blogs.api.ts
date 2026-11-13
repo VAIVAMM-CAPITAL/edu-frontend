@@ -106,7 +106,7 @@ function pickAuthorFromAuthStore(): BlogPost["author"] {
       name:
         [user.firstName, user.lastName].filter(Boolean).join(" ").trim() ||
         user.email ||
-        "Prime Author",
+        "Phantom King Author",
       email: user.email,
       role: user.role,
     };

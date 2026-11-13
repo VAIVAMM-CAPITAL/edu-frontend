@@ -5,8 +5,8 @@ export type NavItem = {
 
 /** Primary marketing navigation - use `/#section` for homepage anchors. */
 export const PRIMARY_NAV: NavItem[] = [
+  { label: "Academy", href: "/#chapter-courses" },
+  { label: "Membership", href: "/#chapter-plans" },
   { label: "About", href: "/about" },
-  { label: "Leadership", href: "/leadership" },
-  { label: "Events", href: "/events" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact & Support", href: "/contact" },
 ];

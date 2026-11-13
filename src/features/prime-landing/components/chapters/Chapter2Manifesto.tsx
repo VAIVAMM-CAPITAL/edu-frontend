@@ -5,9 +5,9 @@ import { gsap, ScrollTrigger, registerGsap } from "@/features/prime-landing/lib/
 import { useScrollStore } from "@/features/prime-landing/components/providers/ScrollStore";
 
 const MANIFESTO =
-  "We believe learning should feel like **momentum**, not obligation. " +
-  "That mastery is a **practice**, not a credential. " +
-  "That your next chapter is closer than you think.";
+  "**Intelligence** over emotion. **Strategy** over speculation. " +
+  "We do not promise profits. We build **knowledge**. " +
+  "We do not ignore risk. We **respect** it.";
 
 type Token = { text: string; bold: boolean };
 
@@ -92,7 +92,7 @@ export function Chapter2Manifesto() {
             fontSize: "clamp(2rem, 5.5vw, 4.75rem)",
             lineHeight: 1.18,
             color: "var(--text-primary)",
-            textShadow: "0 1px 14px rgba(11,25,47,0.35)",
+            textShadow: "0 1px 14px rgba(27,26,23,0.35)",
           }}
         >
           {tokens.map((t, i) => {

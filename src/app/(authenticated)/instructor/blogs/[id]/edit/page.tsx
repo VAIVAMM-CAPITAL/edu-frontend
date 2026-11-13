@@ -61,7 +61,7 @@ export default function EditBlogPostPage({ params }: PageProps) {
                 <Panel>
                     <EmptyState
                         title="You can only edit your own posts"
-                        description="If you believe this is a mistake, ask a Prime Learning admin."
+                        description="If you believe this is a mistake, ask a Phantom King admin."
                         icon={<Pen className="h-10 w-10" />}
                     />
                 </Panel>

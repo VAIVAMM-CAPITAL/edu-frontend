@@ -24,7 +24,7 @@ export function SignInCta({ message }: SignInCtaProps) {
         {message ?? "Sign in to comment and save this post"}
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Create a free Prime Learning account to join the conversation.
+        Create a free Phantom King account to join the conversation.
       </p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <Link href={`/login?redirect=${redirect}`}>

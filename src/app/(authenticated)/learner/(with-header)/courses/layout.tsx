@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
-const siteUrl = "https://paet.ltd";
-const siteName = "Prime Learning";
+import { SITE_URL } from "@/config/site";
+const siteUrl = SITE_URL;
+const siteName = "Phantom King";
 export const metadata: Metadata = {
-    title: "Browse Courses | Prime Learning",
+    title: "Browse Courses | Phantom King",
     description: "Explore our collection of courses across business, technology, finance, design, and professional skills.",
     alternates: {
         canonical: `${siteUrl}/learner/courses`,
     },
     openGraph: {
-        title: "Browse Courses | Prime Learning",
+        title: "Browse Courses | Phantom King",
         description: "Discover courses across business, technology, finance, design, and professional development.",
         url: `${siteUrl}/learner/courses`,
         siteName: siteName,

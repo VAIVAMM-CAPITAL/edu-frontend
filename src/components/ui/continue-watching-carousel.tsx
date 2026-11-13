@@ -134,7 +134,7 @@ export function ContinueWatchingCarousel({ courses, className, }: ContinueWatchi
                       
                       {hoveredIndex === index && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="mt-4">
                           <Link href={`/learner/courses/${courseId}/watch`} className="w-full block">
-                            <Button className="w-full bg-[#E3B558] hover:bg-[#d4a74d] text-black font-semibold">
+                            <Button className="w-full bg-[#cda851] hover:bg-[#b89635] text-black font-semibold">
                               Resume
                             </Button>
                           </Link>

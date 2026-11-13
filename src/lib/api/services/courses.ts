@@ -1,12 +1,18 @@
 import { apiClient } from "../client";
 import type { QuizQuestionEntity } from "./lessons";
+import { MARKET_HEADER, type MarketCode } from "@/lib/market";
 export interface Course {
     courseId: string;
     title: string;
     slug: string;
     description: string;
     thumbnail?: string;
-    price: string;
+    /** Price in the visitor's country; null when the module is not on sale there. */
+    price: string | null;
+    /** Country price list the price comes from (US, UK, AE or IN). */
+    market?: string;
+    /** False when the module has no price in the visitor's country. */
+    purchasable?: boolean;
     compareAtPrice?: string | null;
     currency: string;
     status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
@@ -44,6 +50,7 @@ export interface SectionWithLessons {
     lessons: LessonInCourse[];
 }
 export interface LessonInCourse {
+    resources?: { label: string; resourceIndex?: number; locked?: boolean; url?: string }[];
     lessonId: string;
     title: string;
     type: "VIDEO" | "TEXT" | "QUIZ";
@@ -113,8 +120,9 @@ export const coursesApi = {
         const { data } = await apiClient.get(`/courses?${params.toString()}`);
         return data;
     },
-    getById: async (id: string): Promise<Course> => {
-        const { data } = await apiClient.get(`/courses/${id}`);
+    /** `market` fetches the module priced for that country instead of the visitor's. */
+    getById: async (id: string, options?: { market?: MarketCode }): Promise<Course> => {
+        const { data } = await apiClient.get(`/courses/${id}`, options?.market ? { headers: { [MARKET_HEADER]: options.market } } : undefined);
         return data;
     },
     getBySlug: async (slug: string): Promise<Course> => {

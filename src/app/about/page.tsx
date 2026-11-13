@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
 import { AboutPage } from "@/features/about/components/AboutPage";
+import { SITE_URL } from "@/config/site";
 
-const siteUrl = "https://primelearning.ae";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "About Prime Learning | Premium Learning, Real Outcomes",
+  title: "About Phantom King",
   description:
-    "Prime Learning is the education brand of Miyo Global Private Limited, building practical, mentor led programmes for professionals across India, the UAE, and beyond.",
+    "Phantom King is an international financial markets education, research and trading technology platform. Learn about our mission, principles and editorial standards.",
   alternates: {
     canonical: `${siteUrl}/about`,
   },
   openGraph: {
-    title: "About Prime Learning",
+    title: "About Phantom King",
     description:
-      "The team and mission behind Prime Learning: premium, practical programmes built for India, the UAE, and a global community.",
+      "The mission, principles and editorial standards behind Phantom King.",
     type: "website",
     url: `${siteUrl}/about`,
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Prime Learning",
+    title: "About Phantom King",
     description:
-      "Premium, practical learning programmes built for India, the UAE, and professionals worldwide.",
+      "The mission, principles and editorial standards behind Phantom King.",
   },
 };
 

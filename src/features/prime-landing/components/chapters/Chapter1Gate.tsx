@@ -1,21 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { gsap, ScrollTrigger, registerGsap } from "@/features/prime-landing/lib/gsap";
 import { useScrollStore } from "@/features/prime-landing/components/providers/ScrollStore";
 import { Button } from "@/features/prime-landing/components/ui/Button";
 import { ScrollIndicator } from "@/features/prime-landing/components/ui/ScrollIndicator";
-import { FallbackHero } from "@/features/prime-landing/components/hero/FallbackHero";
-
-const PortalScene = dynamic(
-  () =>
-    import("@/features/prime-landing/components/hero/PortalScene").then(
-      (m) => m.PortalScene
-    ),
-  { ssr: false, loading: () => <FallbackHero /> }
-);
+import { MarketArchitecture } from "../hero/MarketArchitecture";
 
 export function Chapter1Gate() {
   const router = useRouter();
@@ -111,11 +102,11 @@ export function Chapter1Gate() {
       style={{ backgroundColor: "var(--ink)" }}
       aria-label="Introduction"
     >
-      <PortalScene source="portal" />
+      <MarketArchitecture />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[rgba(11,25,47,0.42)]"
+        className="pointer-events-none absolute inset-0 bg-[rgba(27,26,23,0.42)]"
       />
 
       <div
@@ -124,36 +115,32 @@ export function Chapter1Gate() {
       >
         <h1
           data-hero-item
-          className="display mt-8 max-w-[14ch]"
+          className="display mt-8 max-w-[16ch]"
           style={{
-            fontSize: "clamp(3.25rem, 10vw, 8.5rem)",
+            fontSize: "clamp(3rem, 8vw, 7rem)",
             textShadow: "0 0 80px rgba(212,165,116,0.15)",
             color: "var(--text-primary)",
           }}
         >
-          Unlock skills that <em className="italic text-[var(--gold)]">drive</em>{" "}
-          your future.
+          Master the markets.{" "}
+          <em className="italic text-[var(--gold)]">Rule your future.</em>
         </h1>
         <p data-hero-item className="body-lg mt-8 max-w-xl">
-          Learn Smarter. Grow Faster. Lead With Purpose.
+          Choose a Forex, Gold, Crypto or Bitcoin course. Follow its videos at your own pace, with course PDFs available after purchase.
         </p>
         <div
           data-hero-item
           className="mt-6 flex items-center justify-center gap-4 text-[13px] opacity-60"
           style={{ color: "var(--text-secondary)" }}
         >
-          <span>🇮🇳 India</span>
-          <span aria-hidden="true">·</span>
-          <span>🇦🇪 UAE</span>
-          <span aria-hidden="true">·</span>
-          <span>🌍 43 countries</span>
+          <span>Learn with Purpose. Analyse with Precision. Trade with Discipline.</span>
         </div>
         <div
           data-hero-item
           className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
         >
           <Button type="button" variant="primary" onClick={() => scrollTo("#chapter-courses")}>
-            Explore Courses
+            Explore Our Academy
           </Button>
           <Button type="button" variant="ghost" onClick={() => router.push("/login")}>
             Sign in

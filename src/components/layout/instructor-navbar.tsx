@@ -39,7 +39,7 @@ export function InstructorNavbar() {
     ];
     return (<header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-background/80 backdrop-blur-md border-b border-border">
       <Link href="/instructor/dashboard" className="flex items-center gap-2">
-        <span className="text-xl font-bold tracking-tight">PRIME <span className="text-primary">INSTRUCTOR</span></span>
+        <span className="text-xl font-bold tracking-tight">PHANTOM KING <span className="text-primary-gold">INSTRUCTOR</span></span>
       </Link>
 
       <nav className="hidden md:flex items-center gap-1">

@@ -19,6 +19,8 @@ import { toast } from "sonner";
 import { QuizPlayer } from "@/features/courses/components/quiz-player";
 import { cn } from "@/lib/utils";
 import { EnhancedVideoPlayer } from "@/components/ui/enhanced-video-player";
+import { BunnyEmbedPlayer } from "@/components/ui/bunny-embed-player";
+import { PaidCourseResources } from "@/components/course/paid-course-resources";
 import { useLessonPlaybackUrl } from "@/features/lessons/hooks/use-lesson-playback";
 import { useSaveVideoProgress } from "@/features/lessons/hooks/use-lesson-progress";
 export default function CoursePlayerPage({ params, }: {
@@ -200,7 +202,7 @@ export default function CoursePlayerPage({ params, }: {
     }
     return (<div className="learning-surface relative flex h-[calc(100vh-4rem)] bg-[var(--ls-canvas)]">
       
-      {sidebarOpen && (<button type="button" aria-label="Close lesson list" className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)}/>)}
+      {sidebarOpen && (<button type="button" aria-label="Close course content" className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)}/>)}
 
       
       <div className={cn("w-80 border-r border-[var(--ls-divider)] bg-[var(--ls-paper-quiet)] flex flex-col overflow-hidden transition-transform duration-300", "fixed lg:static inset-y-0 left-0 z-50 lg:z-auto", sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0")}>
@@ -264,7 +266,7 @@ export default function CoursePlayerPage({ params, }: {
                                     ? "Reading"
                                     : lesson.type === "QUIZ"
                                         ? "Quiz"
-                                        : "Lesson"}
+                                        : "Content"}
                               </span>
                               {lesson.duration && (<>
                                   <span className="text-muted-foreground">
@@ -307,7 +309,7 @@ export default function CoursePlayerPage({ params, }: {
                       <BookOpen className="h-16 w-16 mb-4 opacity-50"/>
                       <h3 className="text-xl font-semibold">Content Locked</h3>
                       <p className="text-zinc-400 mt-2">
-                        You need to purchase this section to view this lesson.
+                        You need to purchase this section to view this content.
                       </p>
                     </div>) : currentLesson.type === "VIDEO" ? (<div className="relative w-full h-full">
                       {currentLesson.status === "PROCESSING" ? (<div className="absolute inset-0 flex flex-col items-center justify-center text-white bg-zinc-900">
@@ -330,7 +332,9 @@ export default function CoursePlayerPage({ params, }: {
                         </div>) : isLoadingPlayback ? (<div className="absolute inset-0 flex items-center justify-center text-white bg-zinc-900">
                           <Loader2 className="h-8 w-8 animate-spin"/>
                           <span className="ml-2">Loading video...</span>
-                        </div>) : playbackData?.signedUrl ? (<EnhancedVideoPlayer src={playbackData.signedUrl} className="w-full h-full" autoPlay={false} initialPosition={lessonProgress?.lastPosition || 0} title={currentLesson.title} onTimeUpdate={(currentTime, duration) => {
+                        </div>) : playbackData?.embedUrl ? (<BunnyEmbedPlayer key={playbackData.embedUrl} src={playbackData.embedUrl} className="w-full h-full" title={currentLesson.title} initialPosition={lessonProgress?.lastPosition || 0} onTimeUpdate={(currentTime, duration) => {
+                        saveProgress(currentTime, duration);
+                    }}/>) : playbackData?.signedUrl ? (<EnhancedVideoPlayer src={playbackData.signedUrl} className="w-full h-full" autoPlay={false} initialPosition={lessonProgress?.lastPosition || 0} title={currentLesson.title} onTimeUpdate={(currentTime, duration) => {
                         saveProgress(currentTime, duration);
                     }} onError={(error) => {
                         toast.error(`Video playback error: ${error}`);
@@ -340,7 +344,7 @@ export default function CoursePlayerPage({ params, }: {
                             Restricted Access
                           </h3>
                           <p className="text-zinc-400 mt-2 text-center max-w-md">
-                            You need to purchase this section to watch this video.
+                            Purchase this module to watch this video.
                           </p>
                           <Button variant="outline" className="mt-4 border-yellow-500 text-yellow-500 hover:bg-yellow-500/10" onClick={() => router.push(`/learner/courses/${courseId}`)}>
                             View Course Details
@@ -400,9 +404,11 @@ export default function CoursePlayerPage({ params, }: {
                         </div>)}
                     </div>) : (<div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-muted/30">
                       <BookOpen className="h-16 w-16 mb-4 opacity-50"/>
-                      <p>No content available for this lesson</p>
+                      <p>This course item is not available yet</p>
                     </div>)}
                 </div>
+
+                <PaidCourseResources key={currentLesson.lessonId} lesson={currentLesson} />
 
                 <div>
                   <h1 className="text-2xl font-semibold mb-4 text-[var(--ls-ink)]">
@@ -426,7 +432,7 @@ export default function CoursePlayerPage({ params, }: {
                         ? "Reading"
                         : currentLesson.type === "QUIZ"
                             ? "Quiz"
-                            : "Lesson"}
+                            : "Content"}
                           </span>
                         </>)}
                     </div>
@@ -452,10 +458,10 @@ export default function CoursePlayerPage({ params, }: {
               </>) : (<div className="flex flex-col items-center justify-center h-96 text-center">
                 <BookOpen className="h-16 w-16 text-muted-foreground mb-4 opacity-50"/>
                 <h3 className="text-xl font-semibold mb-2">
-                  Select a lesson to start learning
+                  Select a video to start learning
                 </h3>
                 <p className="text-muted-foreground">
-                  Choose a lesson from the sidebar to begin.
+                  Choose a video from this course to begin.
                 </p>
               </div>)}
           </div>

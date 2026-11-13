@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
 import { ContactPage } from "@/features/contact/components/ContactPage";
+import { SITE_URL } from "@/config/site";
 
-const siteUrl = "https://primelearning.ae";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Contact Prime Learning | Offices, Emails & Support",
+  title: "Contact & Support",
   description:
-    "Get in touch with Prime Learning. Email channels for learning and partnerships, our Hyderabad offices, and presence across India and the UAE.",
+    "Find information about Phantom King support, complaints and corrections.",
   alternates: {
     canonical: `${siteUrl}/contact`,
   },
   openGraph: {
-    title: "Contact Prime Learning",
+    title: "Contact Phantom King",
     description:
-      "Reach the right team at Prime Learning: support, partnerships, offices, and direct lines across India and the UAE.",
+      "Phantom King learning support, general enquiries, complaints and corrections.",
     type: "website",
     url: `${siteUrl}/contact`,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Prime Learning",
+    title: "Contact Phantom King",
     description:
-      "Reach the right team at Prime Learning: support, partnerships, and our offices across India and the UAE.",
+      "Phantom King learning support, general enquiries, complaints and corrections.",
   },
 };
 

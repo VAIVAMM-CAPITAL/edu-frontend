@@ -1,0 +1,112 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(135deg, #141a18, #1b1a17 56%, #30281c);
+}
+.grid {
+  position: absolute;
+  inset: -20%;
+  transform: perspective(700px) rotateX(53deg) translateY(24%);
+  background-image:
+    linear-gradient(#d4b27612 1px, transparent 1px),
+    linear-gradient(90deg, #d4b27612 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: linear-gradient(transparent, #000 55%);
+}
+.light {
+  position: absolute;
+  width: 60%;
+  height: 110%;
+  right: -10%;
+  top: -20%;
+  transform: skewX(-24deg);
+  background: linear-gradient(90deg, transparent, #c69a4e13, transparent);
+  filter: blur(35px);
+  animation: light-pass 18s ease-in-out infinite alternate;
+}
+.chart {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+}
+.candle {
+  animation: market-drift 7s ease-in-out infinite alternate;
+}
+.signal {
+  stroke-dasharray: 1800;
+  stroke-dashoffset: 1800;
+  animation: signal-trace 10s ease-in-out infinite;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #17191430,
+    #1b1a17b3 35%,
+    #1b1a1780 65%,
+    #1b1a17 100%
+  );
+}
+@keyframes market-drift {
+  from {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  to {
+    transform: translateY(-12px);
+    opacity: 0.9;
+  }
+}
+@keyframes signal-trace {
+  0% {
+    stroke-dashoffset: 1800;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  70%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes light-pass {
+  from {
+    transform: skewX(-24deg) translateX(0);
+  }
+  to {
+    transform: skewX(-24deg) translateX(-50%);
+  }
+}
+@media (max-width: 640px) {
+  .chart {
+    width: 180%;
+    max-width: none;
+    left: -40%;
+    opacity: 0.45;
+  }
+  .candle,
+  .light {
+    animation: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .candle,
+  .signal,
+  .light {
+    animation: none;
+  }
+  .signal {
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+}

@@ -103,7 +103,8 @@ export function useEnrollmentTrend({ enabled, filters }: UseEnrollmentTrendParam
 }
 interface UseRevenueTrendParams {
     enabled?: boolean;
-    filters?: TrendFilters;
+    /** `currency`: one currency per series; different currencies are never summed. */
+    filters?: TrendFilters & { currency?: string };
 }
 export function useRevenueTrend({ enabled, filters }: UseRevenueTrendParams = {}) {
     const fetchRevenueTrend = async (): Promise<TrendDataPoint[]> => {
@@ -116,6 +117,8 @@ export function useRevenueTrend({ enabled, filters }: UseRevenueTrendParams = {}
             params.startDate = filters.startDate;
         if (filters?.endDate)
             params.endDate = filters.endDate;
+        if (filters?.currency)
+            params.currency = filters.currency;
         const res = await axiosGet<TrendDataPoint[]>("analytics/revenue-trend", params);
         return res.data;
     };

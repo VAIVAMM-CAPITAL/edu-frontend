@@ -1,4 +1,5 @@
 "use client";
+import { PLATFORM_CURRENCY, DEFAULT_PAYMENT_GATEWAY, type PaymentGateway } from "@/config/commerce";
 import {
     LearningPageHeader,
     LearningSurface,
@@ -34,7 +35,7 @@ function CheckoutContent() {
     const createPayment = useCreatePayment();
     const validateCoupon = useValidateCoupon();
     const { user } = useAuthStore();
-    const [gateway, setGateway] = useState<"RAZORPAY" | "STRIPE_US" | "STRIPE_UAE">("STRIPE_UAE");
+    const [gateway, setGateway] = useState<PaymentGateway>(DEFAULT_PAYMENT_GATEWAY);
     const [billingInfo, setBillingInfo] = useState({
         name: `${user?.firstName || ""} ${user?.lastName || ""}`.trim(),
         email: user?.email || "",
@@ -52,13 +53,13 @@ function CheckoutContent() {
     const [couponPreview, setCouponPreview] = useState<CouponValidationResult | null>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<CouponValidationResult | null>(null);
     const baseAmount = useMemo(() => {
-        const coursePrice = course ? parseFloat(course.price) : 0;
+        const coursePrice = course?.price ? parseFloat(course.price) : 0;
         if (itemType === "SECTION" && targetSection?.sectionPrice) {
             return parseFloat(String(targetSection.sectionPrice));
         }
         return coursePrice;
     }, [course, itemType, targetSection?.sectionPrice]);
-    const currency = "AED";
+    const currency = course?.currency ?? PLATFORM_CURRENCY;
     useEffect(() => {
         setAppliedCoupon(null);
         setCouponPreview(null);

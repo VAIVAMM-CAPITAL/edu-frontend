@@ -4,6 +4,7 @@ import { Loader2, Lock, Bug, RefreshCw } from "lucide-react";
 import axios from "axios";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { EnhancedVideoPlayer } from "./enhanced-video-player";
+import { BunnyEmbedPlayer } from "./bunny-embed-player";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 interface DebugInfo {
@@ -30,6 +31,8 @@ interface SecureVideoPlayerProps {
 }
 export function SecureVideoPlayer({ lessonId, videoKey, className, autoPlay = false, showStatus = false }: SecureVideoPlayerProps) {
     const [signedUrl, setSignedUrl] = useState<string | null>(null);
+    // Bunny Stream lessons return a signed embed URL instead of an HLS link.
+    const [embedUrl, setEmbedUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [status, setStatus] = useState<string | null>(null);
@@ -71,7 +74,8 @@ export function SecureVideoPlayer({ lessonId, videoKey, className, autoPlay = fa
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (isMounted) {
-                        setSignedUrl(data.signedUrl);
+                        setSignedUrl(data.signedUrl ?? null);
+                        setEmbedUrl(data.embedUrl ?? null);
                         setStatus(data.status || null);
                         setError(null);
                     }
@@ -113,6 +117,9 @@ export function SecureVideoPlayer({ lessonId, videoKey, className, autoPlay = fa
         <Loader2 className="h-8 w-8 text-white animate-spin"/>
         <span className="ml-2 text-white text-sm">Loading secure content...</span>
       </div>);
+    }
+    if (embedUrl && !error) {
+        return <BunnyEmbedPlayer src={embedUrl} title="Lesson video" className={cn("rounded-md", className)} />;
     }
     if (error || !signedUrl) {
         return (<div className={cn("flex flex-col items-center justify-center bg-gray-900 aspect-video rounded-md text-white p-4", className)}>

@@ -7,19 +7,19 @@ import { Eyebrow } from "@/features/prime-landing/components/ui/Eyebrow";
 
 const STEPS = [
   {
-    title: "Browse",
+    title: "Explore",
     blurb:
-      "Start with the catalog. Filter by career stage, commitment, or category. Every course has a clear outcome attached.",
+      "Start with the academy. Browse Forex, Gold and Crypto modules and see exactly which topics each one covers.",
   },
   {
-    title: "Enroll",
+    title: "Enrol",
     blurb:
-      "Pick your pace. Live cohorts run weekly; self-paced tracks stay open. One click, and you're in.",
+      "Choose the modules you want and check out securely. Your lessons unlock in your learning space straight away.",
   },
   {
-    title: "Earn Certificate",
+    title: "Master your process",
     blurb:
-      "Ship real work, get reviewed, and walk away with a credential recruiters recognize. Built in India & the UAE. Recognized everywhere.",
+      "Work through each lesson at your own pace. Your progress is tracked module by module, so you always know what comes next.",
   },
 ];
 
@@ -210,7 +210,7 @@ export function Chapter6HowItWorks() {
             }}
           >
             From curious to{" "}
-            <em className="italic text-[var(--gold)]">credentialed</em>.
+            <em className="italic text-[var(--gold)]">disciplined</em>.
           </h2>
           <ul className="mt-4 space-y-5">
             {STEPS.map((s, i) => (
@@ -279,15 +279,15 @@ export function Chapter6HowItWorks() {
 
 function BrowseIllustration() {
   const tiles = [
-    { title: "AI", subtitle: "Beginner" },
-    { title: "Data", subtitle: "Analytics" },
-    { title: "Design", subtitle: "Studio" },
-    { title: "Finance", subtitle: "Markets" },
-    { title: "Product", subtitle: "Strategy" },
-    { title: "Coding", subtitle: "Practice" },
-    { title: "Leadership", subtitle: "Teams" },
-    { title: "Marketing", subtitle: "Growth" },
-    { title: "Career", subtitle: "Outcomes" },
+    { title: "Forex", subtitle: "Foundations" },
+    { title: "Mechanics", subtitle: "Markets" },
+    { title: "Technical", subtitle: "Analysis" },
+    { title: "Macro", subtitle: "Economics" },
+    { title: "Gold", subtitle: "XAU/USD" },
+    { title: "Risk", subtitle: "Psychology" },
+    { title: "Bitcoin", subtitle: "Crypto" },
+    { title: "DeFi", subtitle: "Crypto" },
+    { title: "Research", subtitle: "Scenarios" },
   ];
 
   return (
@@ -303,10 +303,10 @@ function BrowseIllustration() {
           style={{
             background:
               i % 3 === 0
-                ? "rgba(37,99,235,0.45)"
+                ? "rgba(182,162,125,0.32)"
                 : i % 3 === 1
-                  ? "rgba(224,180,88,0.38)"
-                  : "rgba(17,34,64,0.5)",
+                  ? "rgba(205,168,81,0.38)"
+                  : "rgba(58,54,46,0.9)",
           }}
         >
           <span
@@ -346,7 +346,7 @@ function EnrollIllustration() {
         />
       </div>
       <div className="mt-6 space-y-2">
-        {["Payment confirmed", "Cohort assigned", "Welcome kit delivered"].map(
+        {["Payment confirmed", "Module unlocked", "Lessons ready in your learning space"].map(
           (line, i) => (
             <p
               key={line}
@@ -371,20 +371,20 @@ function CertificateIllustration() {
     >
       <div
         data-cert-piece
-        className="absolute inset-0 rounded-lg border border-[var(--gold)]/70 bg-[#112240] shadow-2xl"
+        className="absolute inset-0 rounded-lg border border-[var(--gold)]/70 bg-[#26241f] shadow-2xl"
       />
       <div
         data-cert-piece
         className="absolute left-8 top-8 text-xs uppercase tracking-[0.25em] text-[var(--gold-bright)]"
       >
-        Certificate of Completion
+        Module progress
       </div>
       <div
         data-cert-piece
         className="display absolute left-8 top-16 text-2xl"
         style={{ color: "var(--text-primary)" }}
       >
-        Prime Learning
+        Phantom King
       </div>
       <div
         data-cert-piece
@@ -395,16 +395,16 @@ function CertificateIllustration() {
         className="absolute bottom-12 left-8 text-xs"
         style={{ color: "var(--text-tertiary)" }}
       >
-        Issued to learner
+        Forex Academy · lesson by lesson
       </div>
       <div
         data-cert-stamp
         className="absolute bottom-8 right-8 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[var(--gold)] text-[10px] uppercase tracking-[0.2em] text-[var(--gold-bright)]"
       >
         <span className="text-center leading-tight">
-          Prime
+          On
           <br />
-          Verified
+          track
         </span>
       </div>
     </div>

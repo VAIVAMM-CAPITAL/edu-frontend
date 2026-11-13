@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import { gsap, registerGsap } from "@/features/prime-landing/lib/gsap";
 
 export function Loader() {
@@ -70,14 +70,7 @@ export function Loader() {
       className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[var(--ink)]"
     >
       <div className="flex w-[min(560px,92vw)] flex-col items-center gap-6">
-        <Image
-          src="/logo-dark.svg"
-          alt=""
-          width={520}
-          height={200}
-          className="h-auto w-full max-w-[min(280px,80vw)] object-contain"
-          priority
-        />
+        <BrandLogo size="lg" className="text-[var(--text-primary)]" priority />
         <div className="h-px w-full bg-white/10">
           <div ref={barRef} className="h-px w-full bg-[var(--gold)]" />
         </div>

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SimpleBarChart, SimpleLineChart } from "@/components/ui/simple-chart";
@@ -18,30 +19,35 @@ import {
     useRevenueTrend,
     useTopCourses,
 } from "@/features/analytics/hooks/use-analytics";
+import { formatMoney } from "@/lib/market";
 
 /** Display formatting only: the CSV export still carries the raw values. */
 function count(value: number) {
     return value.toLocaleString();
 }
 
-function money(value: number) {
-    return `$${value.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`;
+type CurrencyTotal = { currency: string; total: number; transactions: number };
+
+/** "$1,200.00 · £300.00 · ₹40,000.00": each currency on its own, never added together. */
+function revenueSummary(byCurrency: CurrencyTotal[] | undefined) {
+    if (!byCurrency || byCurrency.length === 0) return "No sales yet";
+    return byCurrency.map((item) => formatMoney(item.total, item.currency)).join(" · ");
 }
 
 export default function AdminDashboardPage() {
     const { data: stats, isLoading } = usePlatformStats();
     const { data: enrollmentStats } = useEnrollmentStats();
     const { data: revenueStats } = useRevenueStats();
+    const revenueByCurrency = (revenueStats as { byCurrency?: CurrencyTotal[] } | undefined)?.byCurrency;
+    const [trendCurrency, setTrendCurrency] = useState<string>("");
+    const chartCurrency = trendCurrency || revenueByCurrency?.[0]?.currency || "USD";
     const { data: enrollmentTrendData } = useEnrollmentTrend({
         enabled: true,
         filters: { period: "day", days: 30 },
     });
     const { data: revenueTrendData } = useRevenueTrend({
         enabled: true,
-        filters: { period: "day", days: 30 },
+        filters: { period: "day", days: 30, currency: chartCurrency },
     });
     const { data: topCourses } = useTopCourses({ enabled: true, filters: { limit: 5 } });
 
@@ -91,7 +97,7 @@ export default function AdminDashboardPage() {
                                 },
                                 {
                                     Metric: "Revenue",
-                                    Value: `$${(revenueStats as any)?.total || 0}`,
+                                    Value: revenueSummary(revenueByCurrency),
                                 },
                             ];
                             const { exportToCSV } = require("@/lib/utils/export");
@@ -126,8 +132,8 @@ export default function AdminDashboardPage() {
                             />
                             <MetricTile
                                 label="Revenue"
-                                value={money((revenueStats as any)?.total || 0)}
-                                hint="Total platform revenue"
+                                value={revenueSummary(revenueByCurrency)}
+                                hint="Completed sales, per currency"
                             />
                         </div>
                     ) : isLoading ? (
@@ -177,9 +183,27 @@ export default function AdminDashboardPage() {
                         <SectionHeading
                             id="revenue-trend-heading"
                             title="Revenue trend"
-                            description="Last 30 days"
+                            description={`Last 30 days, ${chartCurrency}`}
                         />
                         <Panel className="p-4">
+                            {revenueByCurrency && revenueByCurrency.length > 1 ? (
+                                <div className="mb-3 flex justify-end">
+                                    <label className="flex items-center gap-2 text-xs text-[var(--ls-ink-quiet)]">
+                                        Currency
+                                        <select
+                                            value={chartCurrency}
+                                            onChange={(event) => setTrendCurrency(event.target.value)}
+                                            className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+                                        >
+                                            {revenueByCurrency.map((item) => (
+                                                <option key={item.currency} value={item.currency}>
+                                                    {item.currency}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </div>
+                            ) : null}
                             <SimpleLineChart
                                 data={
                                     revenueTrend.length > 0
